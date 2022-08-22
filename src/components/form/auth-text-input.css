@@ -1,0 +1,39 @@
+.form-input {
+  margin-bottom: 25px;
+  width: 100%;
+  border-bottom: 1px solid #c2c2c2;
+}
+.form-input:hover {
+  border-bottom: 1px solid #7e7e7e;
+}
+.form-input:focus-within {
+  border-bottom: 2px solid #0076da;
+  margin-bottom: 24px
+}
+
+  input[type="text"] {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: 'Lato', sans-serif;
+  }
+  input[type="password"], #user-pass, #pass-conf {
+    font-family: 'Lato', sans-serif;
+    width: 95%;
+    border: none;
+    outline: none;
+    font-size: 16px;
+  }
+
+  .show-hide-btn {
+    background: url('http://localhost:3000/img/auth/hidden.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    cursor:pointer;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    border: none;
+  }

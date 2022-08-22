@@ -1,0 +1,42 @@
+.flash-message {
+  position: relative;
+  /* animation: flash 10s; */
+}
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+  .message-success {
+    position: absolute;
+    right: 0;
+    width: 300px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #55b369;
+    text-align: center;
+    color: #FFF;
+  }
+
+  .message-error {
+    position: absolute;
+    right: 0;
+    width: 300px;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #e2462a;
+    text-align: center;
+    color: #FFF;
+  }
