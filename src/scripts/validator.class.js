@@ -23,6 +23,11 @@ class Validator {
     else return true;
   }
 
+  specialCharacters(input) {
+    if (/[!@#$%^&*()+={\[}\];:'",<.>\/?]/.test(input)) return false;
+    else return true;
+  }
+
   upperLowerCase(input) {
     if (/(?=.*[A-Z])(?=.*[a-z])/.test(input)) return true;
     else return false;
@@ -39,16 +44,20 @@ class Validator {
     else return false;  
   }
 
-  uniqueness(input) {
-    const xhr = new XMLHttpRequest();
+  uniqueness(url) {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
     
-    xhr.onload = () => {
-      if (xhr.status === 200 && xhr.readyState === 4) {
-        // code...
-      }
-    };
-    xhr.open('GET', url);
-    xhr.send();
+      xhr.onload = () => {
+        if (xhr.status === 200 && xhr.readyState === 4) {
+          resolve(xhr.responseText);
+        } else {
+          reject(xhr.status);
+        }
+      };
+      xhr.open('GET', url);
+      xhr.send();
+    });
   }
 }
 

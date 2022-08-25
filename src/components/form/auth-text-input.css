@@ -11,6 +11,18 @@
   margin-bottom: 24px
 }
 
+  .input-error {
+    display: none;
+    margin: 0 0 25px 0;
+    padding: 5px;
+    text-align: center;
+    font-size: 15px;
+    border: 1px solid #df0000;
+    border-radius: 5px;
+    background-color: #fcc9c9;
+    color: #df0000;
+  }
+
   input[type="text"] {
     width: 100%;
     border: none;
@@ -37,3 +49,12 @@
     padding: 0;
     border: none;
   }
+
+  #user-pass-requirements {
+    display: none;
+  }
+
+    #user-pass-requirements-list {
+      padding-left: 20px;
+      color: #7e7e7e;
+    }
