@@ -2,12 +2,12 @@
 import './flash-message.css';
 
 
-const FlashMessage = () => {
+const FlashMessage = (props) => {
   return (
-    <div class="flash-message">
-      <div class="message-success">Success message</div>
-      <div class="message-error">Error mesage</div>
-  </div>
+    <div className="flash-message">
+      {props.type === 'success' && <div className="message-success">{props.text}</div>}
+      {props.type === 'error' && <div className="message-error">{props.text}</div>}
+    </div>
   );
 };
 

@@ -1,11 +1,19 @@
 // 3rd party components
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useContext, useState } from "react";
 // custom style components
 import './auth-form.css';
+// custom components
+import ServerContext from '../../store/server-context';
 
 
 // text input
 const AuthForm = (props) => {
+
+  const navigate = useNavigate();
+  const server = useContext(ServerContext);
+
+  const [isRegistrationSuccess, setRegistrationStatus] = useState(false);
 
   const submitValue = (formId) => {
     let value;
@@ -23,6 +31,40 @@ const AuthForm = (props) => {
     return value;
   };
 
+  const submit = (event) => {
+
+    event.preventDefault();
+
+    let data = props.data();
+
+    if (data) {
+      
+      let postData = '';
+  
+      for (const property in data) {
+        postData += property + '=' + data[property] + '&';
+      }
+  
+      postData = postData.substring(0, postData.length - 1);
+  
+      const xhr = new XMLHttpRequest();
+  
+      xhr.onerror = () => console.log('POST Server not responding.');
+      xhr.onload = () => {
+        // wymaga poprawy: sprawdzenie czy użytkownik zapisał się w bazie danych
+        if (props.id === 'registration' && xhr.status === 201) setRegistrationStatus(true);
+        else if (props.id === 'login' && xhr.status === 200) {
+          localStorage.removeItem('session');
+          localStorage.setItem('session', xhr.responseText);
+          navigate('/');
+        }
+      }
+      xhr.open(props.method, server.domain + props.action);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.send(postData);
+    }
+  }
+
   return (
     <main>
 
@@ -37,26 +79,34 @@ const AuthForm = (props) => {
 
         <div id={props.id + '-panel'} className="auth-panel">
 
-          <header id={props.id + '-panel-header'} className="auth-panel-header">
-            <h1></h1>
-            <p><Link to={props.id === 'login' ? '/registration' : '/login'}></Link></p>
-          </header>
+          {isRegistrationSuccess 
+            ? <>
+                <h3>FORM WAS SUBMITED</h3>
+                <Link to="/login"><button>Sign in</button></Link><p> or <Link to="/">Return to homepage</Link>.</p>
+              </>
+            : <>
+                <header id={props.id + '-panel-header'} className="auth-panel-header">
+                  <h1></h1>
+                  <p><Link to={props.id === 'login' ? '/registration' : '/login'}></Link></p>
+                </header>
 
-          <p id={props.id + '-form-error'} className="form-error"></p>
+                <p id={props.id + '-form-error'} className="form-error"></p>
 
-          <form action={'/' + props.id} method={props.method}>
+                <form action={props.action} method={props.method}>
 
-            {props.children}
+                  {props.children}
 
-            <input 
-              type="submit" id={props.id + '-form-submit-btn'} className="form-submit-btn" 
-              value={submitValue(props.id)} onClick={event => props.onSubmit(event)}
-            />
+                  <input 
+                    type="submit" id={props.id + '-form-submit-btn'} className="form-submit-btn" 
+                    value={submitValue(props.id)} onClick={event => submit(event)}
+                  />
 
-          </form>
+                </form>
 
-          {props.id === 'login' && <p>Forgot password? <Link to="/reset-password">Reset password</Link></p>}
-          {props.id === 'reset-password' && <p>Try to <Link to="/login">sign in to a different account</Link>?</p>}
+                {props.id === 'login' && <p>Forgot password? <Link to="/reset-password">Reset password</Link></p>}
+                {props.id === 'reset-password' && <p>Try to <Link to="/login">sign in to a different account</Link>?</p>}
+              </>
+          }
 
         </div>
 

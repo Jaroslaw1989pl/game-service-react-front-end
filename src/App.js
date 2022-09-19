@@ -7,12 +7,10 @@ import RegistrationPage from "./pages/authentication/auth-registration";
 import ResetPasswordPage from "./pages/authentication/auth-pass-reset";
 
 
-const isUserAuthenticated = false;
-
 const App = () => {
   return (
     <Routes>
-      <Route path="/" element={<HomePage auth={isUserAuthenticated}/>}></Route>
+      <Route path="/" element={<HomePage />}></Route>
       {/* authentication routes */}
       <Route path="/login" element={<LoginPage />}></Route>
       <Route path="/registration" element={<RegistrationPage />}></Route>

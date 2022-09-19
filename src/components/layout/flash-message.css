@@ -1,6 +1,6 @@
 .flash-message {
   position: relative;
-  /* animation: flash 10s; */
+  animation: flash 10s;
 }
 @keyframes flash {
   0% {

@@ -1,13 +1,17 @@
-// custom layouts components
-import TopBar from "../components/layout/top-bar";
 // custom style components
 import './home.css';
+// custom layouts components
+import TopBar from "../components/layout/top-bar";
+import GameTile from "../components/games/game-tile";
 
 
-const HomePage = (props) => {
+const HomePage = () => {
   return (
     <>
-      <TopBar auth={props.auth} />
+      <TopBar />
+      <div id="page-content">
+        <GameTile />
+      </div>
     </>
   );
 };

@@ -50,6 +50,15 @@
     border: none;
   }
 
+  #user-name-requirements {
+    display: none;
+  }
+
+    #user-name-requirements-list {
+      padding-left: 20px;
+      color: #7e7e7e;
+    }
+
   #user-pass-requirements {
     display: none;
   }

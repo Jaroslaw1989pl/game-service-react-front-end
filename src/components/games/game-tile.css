@@ -1,0 +1,17 @@
+.game-tile {
+  width: 90%;
+  margin: auto;
+  background-color: rgb(206, 206, 65);
+}
+
+  .game-icon {
+    
+  }
+
+    .game-icon img {
+      width: 30px;
+    }
+
+  .game-title {
+    
+  }
