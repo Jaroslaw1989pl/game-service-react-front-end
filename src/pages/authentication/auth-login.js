@@ -1,5 +1,5 @@
 // 3rd party components
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 // custom style components
 import './auth-login.css';
 // custom functions components
@@ -14,10 +14,11 @@ const LoginPage = () => {
 
   const server = useContext(ServerContext);
 
-  const clearError = () => {
-    const errorElement = document.getElementById('login-form-error');
-    if (errorElement.style.display === 'block') errorElement.style.display = 'none';
-  };
+  // clear all existing sessions
+  useEffect(() => {
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (session) localStorage.clear();
+  }, []);
 
   const submit = () => {
 
@@ -34,8 +35,8 @@ const LoginPage = () => {
 
     try {
       if (emailInput.value === '' && passInput.value === '') throw 'Please enter your\'s credentials.';
-      else if (emailInput.value === '' || passInput.value === '') throw 'Invalid user email or password';
-      else if (!validator.email(emailInput.value)) throw 'Invalid user email or password';
+      else if (emailInput.value === '' || passInput.value === '') throw 'Incorrect user email or password.';
+      else if (!validator.email(emailInput.value)) throw 'Incorrect user email or password.';
       else {
         formData.userEmail = emailInput.value;
         formData.userPass = passInput.value;
@@ -51,8 +52,8 @@ const LoginPage = () => {
   
   return (
     <AuthForm id="login" action={server.authenticationLoginUser} method="POST" data={submit}>
-      <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" onInput={clearError}/>
-      <TextInput inputType="password" id="user-pass" name="userPass" placeholder="Password" onInput={clearError}/>
+      <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" /*onInput={clearError}*//>
+      <TextInput inputType="password" id="user-pass" name="userPass" placeholder="Password" /*onInput={clearError}*//>
     </AuthForm>
   );
 };

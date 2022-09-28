@@ -1,4 +1,4 @@
-.flash-message {
+#flash-message {
   position: relative;
   animation: flash 10s;
 }
@@ -17,7 +17,7 @@
   }
 }
 
-  .message-success {
+  #message-success {
     position: absolute;
     right: 0;
     width: 300px;
@@ -29,14 +29,14 @@
     color: #FFF;
   }
 
-  .message-error {
+  #message-error {
     position: absolute;
     right: 0;
     width: 300px;
     margin: 10px;
     padding: 10px;
     border-radius: 5px;
-    background-color: #e2462a;
+    background-color: #e25e2a;
     text-align: center;
     color: #FFF;
   }

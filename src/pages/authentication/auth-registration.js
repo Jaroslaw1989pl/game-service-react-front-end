@@ -1,5 +1,5 @@
 // 3rd party components
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 // custom style components
 import './auth-registration.css';
 // custom functions components
@@ -13,9 +13,15 @@ import ServerContext from '../../store/server-context';
 
 const RegistrationPage = () => {
 
-  const server = useContext(ServerContext);
+  // clear all existing sessions
+  useEffect(() => {
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (session) localStorage.clear();
+  }, []);
 
   const validator = new Validator();
+  
+  const server = useContext(ServerContext);
   
   const [avatar, setAvatar] = useState();
   const [username, setUsername] = useState();
@@ -136,7 +142,7 @@ const RegistrationPage = () => {
   return (
     <AuthForm id="registration" action={server.authenticationRegisterUser} method="POST" data={submit}>
       <div className="form-left">
-        <AvatarCheckbox onClick={setAvatar}/>
+        <AvatarCheckbox isInputHidden={false} onClick={setAvatar}/>
       </div>
       <div className="form-right">
         <TextInput inputType="text" requirements={true} id="user-name" name="username" placeholder="Username" onInput={usernameValidation} />

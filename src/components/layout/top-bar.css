@@ -1,3 +1,7 @@
+:root {
+  --avatar-img-heiht: 30px;
+}
+
 header#top-bar {
   width: 100%;
   height: calc(var(--avatar-img-heiht) + 10px);
@@ -89,7 +93,7 @@ header#top-bar {
         }
       
     #user-navigation {
-
+      text-align: center;
     }
 
       .profile-avatar {
@@ -113,7 +117,7 @@ header#top-bar {
         width: 100px;
         position: absolute;
         right: 0;
-        transform: translateY(7px);
+        transform: translateY(1px);
         padding: 10px;
         background-color: #475466;
       }

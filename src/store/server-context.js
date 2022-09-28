@@ -10,7 +10,12 @@ export const ServerContextProvider = (props) => {
     domain: 'http://playfab-php-server',
     authenticationFindUser: '/authentication/find-user',
     authenticationRegisterUser: '/authentication/register-user',
-    authenticationLoginUser: '/authentication/login-user'
+    authenticationLoginUser: '/authentication/login-user',
+    authenticationLogout: '/logout',
+    authenticationPassReset: '/authentication/pass-reset',
+    userGet: '/user/get-user',
+    userSetPassword: '/user/set-password',
+    userSetAvatar: '/user/set-avatar'
   };
 
   return <ServerContext.Provider value={server}>{props.children}</ServerContext.Provider>;

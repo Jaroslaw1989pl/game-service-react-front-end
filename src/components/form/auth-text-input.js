@@ -12,8 +12,10 @@ const TextInput = (props) => {
   const validator = new Validator();
   
   const clearError = () => {
-    const errorElement = document.getElementById(props.id + '-error');
-    if (errorElement.style.display === 'block') errorElement.style.display = 'none';
+    const inputError = document.getElementById(props.id + '-error');
+    if (inputError.style.display === 'block') inputError.style.display = 'none';
+    const formError = document.querySelector('.form-error');
+    if (formError.style.display === 'block') formError.style.display = 'none';
   };
 
   const showRequirements = () => {
@@ -46,7 +48,8 @@ const TextInput = (props) => {
 
     return (
       <>
-        <div id={props.id + '-input-container'} className="form-input text-input" onFocus={showRequirements} onBlur={hideRequirements}>     
+        <div id={props.id + '-input-container'} className="form-input text-input" hidden={props.hidden} 
+          onFocus={showRequirements} onBlur={hideRequirements}>     
           {/* input error message */}
           <p id={props.id + "-error"} className="input-error"></p>
           {/* input label */}
@@ -55,19 +58,19 @@ const TextInput = (props) => {
           <input type="text" id={props.id} name={props.name} placeholder={props.placeholder} 
                  onInput={event => {
                     clearError();
-                    props.onInput(event.target.value);
+                    props.onInput && props.onInput(event.target.value);
                     props.requirements && usernameValidation(event.target.value);
                   }} />
         </div>
         {/* username requirements] */}
-        <section id="user-name-requirements" className="input-requirements">
+        {props.requirements && <section id="user-name-requirements" className="input-requirements">
           <strong>Create a user name that:</strong>
             <ul id="user-name-requirements-list">
               <li id="user-name-length" ref={lengthRule}>contains between 3 and 24 characters</li>
               <li id="user-name-alfa-num" ref={alphanumericRule}>does not contain non afpha numeric symbols</li>
               <li id="user-name-uniqueness">is not already in use</li>
             </ul>
-        </section>
+        </section>}
       </>
     );
   }
@@ -126,14 +129,14 @@ const TextInput = (props) => {
           <input type="password" id={props.id} name={props.name} placeholder={props.placeholder} 
                  onInput={event => {
                     clearError();
-                    props.onInput(event.target.value);
+                    props.onInput && props.onInput(event.target.value);
                     props.requirements && passValidation(event.target.value);
                   }} />
           {/* password input show/hide toggle button */}
           <input type="button" className="show-hide-btn" id={props.id + '-toggle'} onClick={event => togglePass(props.id)} />
         </div>
         {/* password requirements] */}
-        <section id="user-pass-requirements" className="input-requirements">
+        {props.requirements && <section id="user-pass-requirements" className="input-requirements">
           <strong><p>Create a password that:</p></strong>
           <ul id="user-pass-requirements-list">
             <li id="password-length" ref={lengthRule}>contains at least 8 characters</li>
@@ -141,7 +144,7 @@ const TextInput = (props) => {
             <li id="password-symbols" ref={symbolRule}>contains at least one number (0-9) or underscore symbol</li>          
             <li id="password-alpha-num" ref={alphanumericRule}>does not contain non alphanumeric symbols</li>
           </ul>
-        </section>
+        </section>}
       </>
     );
   }
