@@ -1,6 +1,5 @@
 #flash-message {
-  position: relative;
-  animation: flash 10s;
+  animation: flash 7s;
 }
 @keyframes flash {
   0% {
@@ -18,8 +17,7 @@
 }
 
   #message-success {
-    position: absolute;
-    right: 0;
+    float: right;
     width: 300px;
     margin: 10px;
     padding: 10px;
@@ -30,8 +28,7 @@
   }
 
   #message-error {
-    position: absolute;
-    right: 0;
+    float: right;
     width: 300px;
     margin: 10px;
     padding: 10px;

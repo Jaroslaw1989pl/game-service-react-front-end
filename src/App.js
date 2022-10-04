@@ -12,6 +12,7 @@ import NewPasswordPage from "./pages/authentication/auth-pass-new";
 // protected pages
 import SettingsPage from "./pages/settings/settings";
 import SettingsUsernamePage from "./pages/settings/settings-username";
+import SettingsEmailPage from "./pages/settings/settings-email";
 // error pages
 import NotFound from "./pages/error/404-page";
 
@@ -32,6 +33,7 @@ const App = () => {
       {/* protected routes */}
       <Route path="/settings" element={<SettingsPage />}></Route>
       <Route path="/settings/username" element={<SettingsUsernamePage />}></Route>
+      <Route path="/settings/email" element={<SettingsEmailPage />}></Route>
       
       {/* Not found route */}
       <Route path="*" element={<NotFound />}></Route>

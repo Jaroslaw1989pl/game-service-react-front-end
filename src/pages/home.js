@@ -8,15 +8,17 @@ import FlashMessage from '../components/layout/flash-message';
 import GameTile from "../components/games/game-tile";
 // custom components
 import ServerContext from '../store/server-context';
+import FlashMessageContext from '../store/flash-message-context';
 
 
 const HomePage = () => {
 
+  // useContext constans
   const server = useContext(ServerContext);
+  const flash = useContext(FlashMessageContext);
 
   const [isUserAuthenticated, setUserAuthenticationStatus] = useState(false);
   const [user, setUser] = useState({});
-  const [flashMessage, setFlashMessage] = useState({active: false, type: '', text: ''});
 
   useEffect(() => {
     
@@ -35,7 +37,7 @@ const HomePage = () => {
         } else {
           localStorage.removeItem('session');
           setUserAuthenticationStatus(false);
-          setFlashMessage({active: true, type: 'error', text: xhr.responseText});
+          flash.add('error', xhr.responseText);
         }
       }
       xhr.open('POST', server.domain + server.userGet);
@@ -48,7 +50,11 @@ const HomePage = () => {
   return (
     <>
       <TopBar auth={isUserAuthenticated} user={user}/>
-      {flashMessage.active && <FlashMessage type={flashMessage.type} text={flashMessage.text}/>}
+
+      <ul id="flash-messages-list">
+        {flash.messages.map((message) => <FlashMessage type={message.type} text={message.text}/>)}
+      </ul>
+
       <div id="page-content">
         <GameTile />
       </div>

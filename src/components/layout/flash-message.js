@@ -12,16 +12,19 @@ const FlashMessage = (props) => {
   useEffect(() => {
     setTimeout(() => {
       setTime(time => {
-        if (time < 8) return time + 1;
-        else message.current.remove(); 
+        if (time < 5) return time + 1;
+        else message.current.remove();
       });
     }, 1000);
   }, [time]);
   
   return (
-    <div id="flash-message" ref={message}>
-      <div id={'message-' + props.type}>{props.text}</div>
-    </div>
+    <li ref={message}>
+      <div id="flash-message">
+        <div id={'message-' + props.type}>{props.text}</div>
+      </div>
+      <div style={{clear: 'both'}}></div>
+    </li>
   );
 };
 

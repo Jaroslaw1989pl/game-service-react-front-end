@@ -91,7 +91,7 @@ const AuthForm = (props) => {
   }
 
   return (
-    <main>
+    <main id="auth">
 
       <div id="content-left">
 

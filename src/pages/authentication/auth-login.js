@@ -52,8 +52,8 @@ const LoginPage = () => {
   
   return (
     <AuthForm id="login" action={server.authenticationLoginUser} method="POST" data={submit}>
-      <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" /*onInput={clearError}*//>
-      <TextInput inputType="password" id="user-pass" name="userPass" placeholder="Password" /*onInput={clearError}*//>
+      <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" />
+      <TextInput inputType="password" id="user-pass" name="userPass" placeholder="Password" />
     </AuthForm>
   );
 };

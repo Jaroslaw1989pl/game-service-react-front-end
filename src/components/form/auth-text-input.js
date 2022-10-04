@@ -14,8 +14,9 @@ const TextInput = (props) => {
   const clearError = () => {
     const inputError = document.getElementById(props.id + '-error');
     if (inputError.style.display === 'block') inputError.style.display = 'none';
-    const formError = document.querySelector('.form-error');
-    if (formError.style.display === 'block') formError.style.display = 'none';
+    // wymaga poprawy: zapisanie elementu do zmiennej bez wywoływanie błedu
+    if (document.querySelector('.form-error') && document.querySelector('.form-error').style.display === 'block') 
+      document.querySelector('.form-error').style.display = 'none';
   };
 
   const showRequirements = () => {

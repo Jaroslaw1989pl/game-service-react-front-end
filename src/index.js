@@ -7,13 +7,16 @@ import './index.css';
 // custom components
 import App from './App';
 import { ServerContextProvider } from "./store/server-context";
+import { FlashMessageContextProvider } from './store/flash-message-context';
 
 
 const headerRoot = createRoot(document.getElementById('root'));
 headerRoot.render(
   <ServerContextProvider>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <FlashMessageContextProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </FlashMessageContextProvider>
   </ServerContextProvider>
 );

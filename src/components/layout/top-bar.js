@@ -32,7 +32,7 @@ const TopBar = (props) => {
     <header id="top-bar">
 
       <div id="top-bar-left">
-        <Link to="/" className="img-home-link"><img src="img/favicon.png" alt="flavico" /></Link>
+        <Link to="/" className="img-home-link"><img src="/img/favicon.png" alt="flavico" /></Link>
         <Link to="/" className="home-link">Playfab</Link>
       </div>
 
@@ -41,7 +41,7 @@ const TopBar = (props) => {
         {props.auth 
           ? <div id="user-navigation">
 
-              <img src={'img/profile-avatars/' + props.user.avatar + '.jpg'} alt="profile avatar" className="profile-avatar"></img>
+              <img src={'/img/profile-avatars/' + props.user.avatar + '.jpg'} alt="profile avatar" className="profile-avatar"></img>
 
               <a href="" id="dropdown-toggle" onClick={event => toggleDropdownMenu(event)}>{props.user.name} &#x21B4;</a>
 

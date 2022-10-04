@@ -1,12 +1,12 @@
 h1#title::before {
-  content: 'UPDATE YOUR USERNAME';
+  content: 'UPDATE YOUR EMAIL ADDRESS';
 }
 
   p#top-paragraph::before {
-    content: 'You can change your username displayed on the playfab.pl website. Username change is available once every 14 days.';
+    content: 'To change the email address, please follow below steps:';
   }
 
-  #username-form-submit-btn {
+  #email-form-submit-btn {
     width: 100%;
     margin: 10px 0;
     padding: 7px;
@@ -18,12 +18,12 @@ h1#title::before {
     background-color: #FFF;
     color: #5fbe77;
   }
-  #username-form-submit-btn:hover {
+  #email-form-submit-btn:hover {
     cursor: pointer;
     border: 2px solid #64db82;
     color: #64db82;
   }
-  #username-form-submit-btn:active {
+  #email-form-submit-btn:active {
     border: 2px solid #4b8a5b;
     color: #4b8a5b;
   }

@@ -9,60 +9,72 @@ import FlashMessage from '../../components/layout/flash-message';
 import AvatarCheckbox from '../../components/form/auth-checkbox-input';
 // custom components
 import ServerContext from '../../store/server-context';
+import FlashMessageContext from '../../store/flash-message-context';
 
 
-const SettingsPage = () => {
-
+const SettingsPage = (props) => {
+  // useContext constans
   const server = useContext(ServerContext);
-  
+  const flash = useContext(FlashMessageContext);
+  // useNavigate constans
   const navigate = useNavigate();
-
+  // useRef constans
   const menu = useRef();
-
+  // useState constans for user authentication on page
   const [isUserAuthenticated, setUserAuthenticationStatus] = useState(false);
   const [user, setUser] = useState({});
+  const [isProfileUpdated, setProfileUpdateStatus] = useState();
+  // useState constans for user actions on page
   const [isNameUpdateAvailable, setNameUpdateAvailability] = useState(false);
-  const [flashMessage, setFlashMessage] = useState({active: false, type: '', text: ''});
+  const [isEmailUpdateAvailable, setEmailUpdateAvailability] = useState(false);
+
+  let [counter, setCounter] = useState(0); // <-- zmienna pomocnicza
 
   useEffect(() => {
-
+    console.log(flash); // <-- logi pomocnicze
     const timestamp = Math.floor(new Date().getTime() / 1000);
     
     const session = JSON.parse(localStorage.getItem('session'));
 
     const token = session ? session.token : '';
    
-    const xhr = new XMLHttpRequest();      
-        
+    const xhr = new XMLHttpRequest();
+
     xhr.onerror = () => console.log('SettingsPage: POST Server not responding.');
     xhr.onload = () => {
       if (xhr.status === 200) {
         const data = JSON.parse(xhr.responseText);
-        if (timestamp > data.nameUpdate) setNameUpdateAvailability(true);
+        /*if (timestamp > parseInt(data.nameUpdate) + 60 * 60 * 24 * 14) */setNameUpdateAvailability(true);
+        /*if (timestamp > parseInt(data.emailUpdate) + 60 * 60 * 24 * 14) */setEmailUpdateAvailability(true);
         setUserAuthenticationStatus(true);
         setUser(data);
       } else {
         localStorage.removeItem('session');
         setUserAuthenticationStatus(false);
-        navigate('/login');
+        flash.add('error', xhr.responseText);
+        navigate('/');
       }
     }
     xhr.open('POST', server.domain + server.userGet);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.setRequestHeader('Authorization', 'Bearer ' + token);
     xhr.send();
-  }, [user.avatar]);
+  }, [isProfileUpdated]);
 
   const setAvatar = (value) => {
+    if (user.avatar === value) return;
 
-    const xhr = new XMLHttpRequest();      
-        
+    const xhr = new XMLHttpRequest();
+
     xhr.onerror = () => console.log('Avatar: POST Server not responding.');
     xhr.onload = () => {
       if (xhr.status === 200) {
-        user.avatar = value;
-        setFlashMessage({active: true, type: 'success', text: 'Avatar updated successfully.'});
-      } else setFlashMessage({active: true, type: 'error', text: xhr.responseText});
+        setProfileUpdateStatus(value);
+        setCounter(counter => counter + 1); // <-- zmienna pomocnicza
+        flash.add('success', 'Avatar updated successfully.' + counter);
+      } else {
+        flash.add('error', xhr.responseText);
+      }
     }
     xhr.open('POST', server.domain + server.userSetAvatar);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
@@ -73,7 +85,9 @@ const SettingsPage = () => {
     <>
       <TopBar auth={isUserAuthenticated} user={user}/>
 
-      {flashMessage.active && <FlashMessage type={flashMessage.type} text={flashMessage.text}/>}
+      <ul id="flash-messages-list">
+        {flash.messages.map((message) => <FlashMessage type={message.type} text={message.text}/>)}
+      </ul>
 
       {/* <div id="page-content"> */}
 
@@ -110,7 +124,7 @@ const SettingsPage = () => {
                   {
                     !isNameUpdateAvailable && 
                     <p className="info-personal-wrapper-message">
-                      Next update will be available on {new Date(user.nameUpdate * 1000 + 3600000 * 24 * 14).toDateString()}.
+                      Next update will be available on {new Date(parseInt(user.nameUpdate) * 1000 + 3600000 * 24 * 14).toDateString()}.
                     </p>
                   }
                   <div style={{clear: 'both'}}></div>
@@ -141,8 +155,14 @@ const SettingsPage = () => {
                     <p id="p-date">Email address added: {new Date(user.emailUpdate * 1000).toDateString()}</p>
                   </div>
                   <div className="info-cell-edit">
-                    <Link to="/settings-email"><p>Change</p></Link>
+                    <Link to="/settings/email"><p>Change</p></Link>
                   </div>
+                  {
+                    !isEmailUpdateAvailable && 
+                    <p className="info-personal-wrapper-message">
+                      Next update will be available on {new Date(parseInt(user.emailUpdate) * 1000 + 3600000 * 24 * 14).toDateString()}.
+                    </p>
+                  }
                   <div style={{clear: 'both'}}></div>
                 </div>
                 {/* User password section */}

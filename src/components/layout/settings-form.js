@@ -1,170 +1,184 @@
 // 3rd party components
-import { useContext, useState, useRef } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 // custom style components
 import './settings-form.css';
 // custom components
 import ServerContext from '../../store/server-context';
+import TextInput from "../form/auth-text-input";
 
 
 const SettingsForm = (props) => {
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const server = useContext(ServerContext);
+
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isCodeConfirmed, setIsCodeConfirmed] = useState(false);
+  const [confCode, setConfCode] = useState('');
+
   const formError = useRef();
 
-  const submitValue = (formId) => {
-    let value;
-    switch (formId) {
-      case 'login':
-        value = 'Sign in';
-        break;
-      case 'registration':
-        value = 'Sign up';
-        break;
-      case 'reset-password':
-        value = 'Send email';
-        break;
+  useEffect(() => {
+    console.log('dziala');
+    if (props.user) {
+      const xhr = new XMLHttpRequest();
+      xhr.onerror = () => console.log('Settings useEfect. Server not responding.');
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          console.log(xhr.responseText);
+          setIsEmailSent(true);
+        } 
+      }
+      xhr.open('GET', server.domain + '/authentication/form-status?userEmail=' + props.user.email, true);
+      xhr.send();
     }
-    return value;
-  };
+  });
 
-  const submit = (event) => {
+  const sendEmail = (event) => {
 
     event.preventDefault();
-
-    let data = props.data();
-
-    if (data) {
-
-      let postData = '';
-      
-      for (const property in data) {
-        postData += property + '=' + data[property] + '&';
-      }
-      
-      postData = postData.substring(0, postData.length - 1);
   
-      const xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
   
-      xhr.onerror = () => console.log('Settings form. Server not responding.');
-      xhr.onload = () => {
+    xhr.onerror = () => console.log('Settings email form. Server not responding.');
+    xhr.onload = () => {
+      if (xhr.status === 201) {
+        console.log(xhr.responseText);
+        setIsEmailSent(true);
+      } 
+    }
+    xhr.open('POST', server.domain + server.authenticationEmailCode);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send('userEmail=' + props.user.email);  
+  }
 
+  const confirmCode = (event) => {
+
+    event.preventDefault();
+  
+    const codeError = document.getElementById('confirmation-code-error');
+
+    try {
+      if (confCode.length === 0) throw 'Please enter confirmation code.'; 
+      else if (confCode.length !== 5) throw 'Confirmation code must be 5 digit number';
+      else if (isNaN(confCode)) throw 'Confirmation code must be 5 digit number';
+      else {
+        const xhr = new XMLHttpRequest();      
+        xhr.onerror = () => console.log('Settings code form. Server not responding.');
+        xhr.onload = () => {
+          console.log(xhr.responseText);
+          if (xhr.status === 200) setIsCodeConfirmed(true);
+          else {
+            codeError.textContent = xhr.responseText;
+            codeError.style.display = 'block';
+          }
+        }
+        xhr.open('POST', server.domain + server.authenticationConfirmCode);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.send('userEmail=' + props.user.email + '&code=' + confCode);  
       }
-      xhr.open(props.method, server.domain + props.action);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.send(postData);
+    } catch (error) {
+      codeError.textContent = error;
+      codeError.style.display = 'block';
     }
   }
 
   return (
-    <main>
+    <main id="settings">
 
       <Link to="/settings" id="back-anchor">&#171; Account Management</Link>
 
       <header>
-        <h1>UPDATE EMAIL</h1>
+        <h1 id="title">{/* content added in css file */}</h1>
       </header>
 
-      <div id="form">
-            
-        <% if (!isUpdateAvailable) { %>
-    
-          <p id="date-error" class="form-error"><%= 
-            'Next update will be available ' + new Date(user.emailUpdate * 1000 + 3600000 * 24 * 14).toLocaleDateString() + '.'
-          %></p>
-    
-        <% } else { %>
+      <div id="settings-form">
 
-          <p>To change the email address, please follow below steps:</p>
+        <p id="top-paragraph">{/* content added in css file */}</p>
 
-          <div id="step-list">
-            <div class="step">
-              <div class="step-icon<%= isEmailSent === false ? ' img-active' : '' %>"><img src="/assets/settings-icons/dots.png" alt=""></div>
-              <div class="step-content">
-                <div class="step-text<%= isEmailSent === false ? ' text-active' : '' %>">1. Generate code</div>
-                <div class="step-content-bottom"></div>
+        {props.authentication &&
+          <div id="steps-list">
+            <div className="step">
+              <div className="step-icon active">
+                <img src="/img/settings-icons/dots.png" alt=""></img>
+              </div>
+              <div className={isEmailSent ? "step-content" : "step-content active"}>
+                <div className="step-text">1. Generate code</div>
               </div>
             </div>
-            <div class="step">
-              <div class="step-icon<%= isEmailSent ? ' img-active' : '' %>"><img src="/assets/settings-icons/form.png" alt=""></div>
-              <div class="step-content">
-                <div class="step-text<%= isEmailSent ? ' text-active' : '' %>">2. New email address</div>
-                <div class="step-content-bottom"></div>
+            <div className="step">
+              <div className={isEmailSent ? "step-icon active" : "step-icon"}>
+                <img src="/img/settings-icons/pin.png" alt=""></img>
+              </div>
+              <div className={isEmailSent && !isCodeConfirmed ? "step-content active" : "step-content"}>
+                <div className="step-text">2. Confirm code</div>
               </div>
             </div>
-          </div>
-    
-          <% if (!isEmailSent) { %>
-            
-            <!-- FORM 1 -->
-            
-            <form name="email-form" action="/settings-email" method="POST">
+            <div className="step">
+              <div className={isCodeConfirmed ? "step-icon active" : "step-icon"}>
+                <img src="/img/settings-icons/form.png" alt=""></img>
+              </div>
+              <div className={isCodeConfirmed ? "step-content active" : "step-content"}>
+                <div className="step-text">3. Complete form</div>
+              </div>
+            </div>
+            <div style={{clear: 'both'}}></div>
+          </div> 
+        }
+        {
+          (props.authentication && !isEmailSent) &&
+          // FORM 1 - email with confirmation code
+          <form name="email-form" method="POST">
               
-              <header>
-                <p>To change email address, click Send email. The confirmation code will be sent to your email address.</p>
-              </header>
-              
-              <input type="submit" id="email-submit-btn" class="form-submit-btn" name="emailSubmitBtn" value="Send email">
-              
-            </form>
-    
-          <% } else { %>
-              
-            <!-- FORM 1 COMPLETE -->
-        
-            <header >
-              <p><b>Confirmation code was sent to email: <%= hiddenEmail %></b></p>
-              <p>To continue, enter the confirmation code. The code is valid for 1 hour. If you do not enter the code, you will not be able to update the email address.</p>
+            <header>
+              <p id="email-form-top-paragraph"></p>
+              <p><b>The confirmation code will be sent to your email address.</b></p>
             </header>
-      
-            <!-- FORM 2 -->
-    
-            <form name="new-email-form" action="/settings-email" method="POST">
-      
-              <!-- verification code -->
-              <input type="text" id="code" name="code" class="registration-input" value="<%= 
-                typeof inputs !== 'undefined' ? inputs.code : ''
-              %>" placeholder="1. Enter code">
-              <!-- verification code error message -->
-              <p id="code-error" class="input-error<%= (typeof errors !== 'undefined' && errors.code) ? ' active' : ''%>"><%= 
-                (typeof errors !== 'undefined' && errors.code) ? errors.code : '' 
-              %></p> 
-    
-              <!-- new email -->
-              <input type="text" id="user-email" name="newEmail" class="registration-input" value="<%= 
-                typeof inputs !== 'undefined' ? inputs.newEmail : ''
-              %>" placeholder="2. Enter new email address">
-              <!-- new email error message -->
-              <p id="user-email-error" class="input-error<%= (typeof errors !== 'undefined' && errors.newEmail) ? ' active' : ''%>"><%= 
-                (typeof errors !== 'undefined' && errors.newEmail) ? errors.newEmail : '' 
-              %></p>
-    
-              <!-- password verification -->
-              <!-- <input type="text" id="user-pass" name="userPass" class="registration-input" value="<%= 
-                typeof inputs !== 'undefined' ? inputs.userPass : ''
-              %>" placeholder="3. Confirm password"> -->
-
-              <div class="form-input">
-                <input type="password" id="user-pass" name="userPass" class="registration-input" value="<%= 
-                  typeof inputs !== 'undefined' ? inputs.userPass : ''
-                  %>" placeholder="3. Confirm password">
-                <input type="button" class="show-hide-btn" id="pass-toggle" value="">
-              </div>
-              <!-- password verification error message -->
-              <p id="user-pass-error" class="input-error<%= (typeof errors !== 'undefined' && errors.password) ? ' active' : ''%>"><%= 
-                (typeof errors !== 'undefined' && errors.password) ? errors.password : '' 
-              %></p>     
               
-              <input type="submit" id="form-submit-btn" class="form-submit-btn" name="formSubmitBtn" value="Update email">
-    
+            <input type="submit" id="email-submit-btn" className="settings-form-submit-btn" name="emailSubmitBtn" value="Send email"
+                   onClick={event => sendEmail(event)} />
+              
+          </form>
+        }
+        {
+          (props.authentication && isEmailSent) &&
+          <>
+            <header>
+              {/* wymaga poprawy: ukrycie adresu email pod gwiazdkami */}
+              <p>Confirmation code was sent to email: <b>{props.user.email}</b></p>
+            </header>
+            {/* FORM 2 - Confirm code from email */}
+            <form name="code-form" method="POST">
+                
+              <header>
+                <p id="code-form-top-paragraph"></p>
+                <p><b>To continue, enter the confirmation code. The code is valid for 1 hour.</b></p>
+              </header>
+
+              <TextInput inputType="text" id="confirmation-code" name="confirmationCode" placeholder="Confirmation code" 
+                         onInput={setConfCode} />
+                
+              <input type="submit" id="code-submit-btn" className="settings-form-submit-btn" name="codeSubmitBtn" value="Confirm code"
+                     onClick={(event) => confirmCode(event)} />
+                
             </form>
-              
-          <% } %>
-          
-        <% } %> 
-
+          </>
+        }
+        {
+          (props.authentication && isCodeConfirmed) && 
+          <>
+            {props.children}
+          </>
+        }
+        {
+          !props.authentication && 
+          <>
+            {props.children}
+          </>
+        }
+        
       </div>
 
     </main>
