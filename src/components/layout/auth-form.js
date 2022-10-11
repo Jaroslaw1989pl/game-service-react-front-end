@@ -51,7 +51,6 @@ const AuthForm = (props) => {
       postData = postData.substring(0, postData.length - 1);
   
       const xhr = new XMLHttpRequest();
-  
       xhr.onerror = () => console.log('Authentication form. Server not responding.');
       xhr.onload = () => {
         // wymaga poprawy: sprawdzenie czy użytkownik zapisał się w bazie danych

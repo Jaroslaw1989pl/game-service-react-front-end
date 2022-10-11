@@ -1,4 +1,4 @@
-main#settings {
+main.settings-form-content {
   padding-top: 50px;
   text-align: center;
   color: #FFF;
@@ -12,11 +12,11 @@ main#settings {
     color: #ffffff;
   }
 
-  main#settings header {
+  main.settings-form-content header {
 
   }
 
-  #settings-form {
+  .settings-form {
     min-width: 400px;
     max-width: 530px;
     margin: auto;

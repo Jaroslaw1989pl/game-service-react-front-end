@@ -20,6 +20,18 @@ const HomePage = () => {
   const [isUserAuthenticated, setUserAuthenticationStatus] = useState(false);
   const [user, setUser] = useState({});
 
+  const tryFunction = () => {
+    const xhr = new XMLHttpRequest();      
+    xhr.onerror = () => console.log('tryFunction: POST Server not responding.');
+    xhr.onload = () => {
+      console.log(xhr.responseText);
+    }
+    xhr.open('POST', server.domain + '/test', true, 'Jeremy', 'secretpassword');
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.setRequestHeader('Authorization', 'Bearer ' + 'Jeremy' + '|' + 'secretpassword');
+    xhr.send(JSON.stringify({user: 'Jeremy', pass: 'secret'}));
+  };
+
   useEffect(() => {
     
     const session = JSON.parse(localStorage.getItem('session'));
@@ -57,6 +69,7 @@ const HomePage = () => {
 
       <div id="page-content">
         <GameTile />
+        <button id="try-me-btn" onClick={tryFunction}>TRY ME!</button>
       </div>
     </>
   );

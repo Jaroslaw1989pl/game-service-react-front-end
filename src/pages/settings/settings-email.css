@@ -1,29 +1,11 @@
-h1#title::before {
+#email-settings h1#title::before {
   content: 'UPDATE YOUR EMAIL ADDRESS';
 }
 
-  p#top-paragraph::before {
+  #email-settings p#top-paragraph::before {
     content: 'To change the email address, please follow below steps:';
   }
 
-  #email-form-submit-btn {
-    width: 100%;
-    margin: 10px 0;
-    padding: 7px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    border: 2px solid #5fbe77;
-    background-color: #FFF;
-    color: #5fbe77;
-  }
-  #email-form-submit-btn:hover {
-    cursor: pointer;
-    border: 2px solid #64db82;
-    color: #64db82;
-  }
-  #email-form-submit-btn:active {
-    border: 2px solid #4b8a5b;
-    color: #4b8a5b;
-  }
+#email-settings [name="custom-form"] header p b::before {
+  content: 'Please enter new email address.';
+}

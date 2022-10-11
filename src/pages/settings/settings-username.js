@@ -125,7 +125,7 @@ const SettingsUsernamePage = () => {
         {flash.messages.map((message) => <FlashMessage type={message.type} text={message.text}/>)}
       </ul>
       
-      <SettingsForm authentication={false}>
+      <SettingsForm id="username" authentication={false}>
 
         <p id={'new-username-form-error'} className="form-error" ref={formError}></p>
 

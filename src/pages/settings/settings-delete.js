@@ -2,7 +2,7 @@
 import { useContext, useState, useEffect, useRef } from 'react';
 import { useLink, useNavigate } from 'react-router-dom';
 // custom style components
-import './settings-email.css';
+import './settings-delete.css';
 // custom functions components
 import Validator from '../../scripts/validator.class';
 // custom layouts components
@@ -15,7 +15,7 @@ import ServerContext from '../../store/server-context';
 import FlashMessageContext from '../../store/flash-message-context';
 
 
-const SettingsEmailPage = () => {
+const SettingsDeleteUserPage = () => {
   // objects based on custom functions components
   const validator = new Validator();
   // useContext constans
@@ -27,7 +27,6 @@ const SettingsEmailPage = () => {
   const [isUserAuthenticated, setUserAuthenticationStatus] = useState(false);
   const [user, setUser] = useState({});
   // useState constans for user actions on page
-  const [newEmail, setNewEmail] = useState('');
   const [userPass, setUserPass] = useState('');
 
   useEffect(() => {
@@ -38,7 +37,7 @@ const SettingsEmailPage = () => {
    
     const xhr = new XMLHttpRequest();      
         
-    xhr.onerror = () => console.log('SettingsEmailPage: POST Server not responding.');
+    xhr.onerror = () => console.log('SettingsDeleteUserPage: POST Server not responding.');
     xhr.onload = () => {
       if (xhr.status === 200) {
         setUserAuthenticationStatus(true);
@@ -60,44 +59,42 @@ const SettingsEmailPage = () => {
     
     event.preventDefault();
 
-    const newEmailError = document.getElementById('new-email-error');
     const userPassError = document.getElementById('user-pass-error');
-    
-    if (newEmail.length === 0) {
-      newEmailError.textContent = 'Please enter new email address.';
-      newEmailError.style.display = 'block';
-    } else if (!validator.email(newEmail)) {
-      newEmailError.textContent = 'Incorrect email address.';
-      newEmailError.style.display = 'block';
-    } else {
-      if (userPass.length === 0) {
-        userPassError.textContent = 'Please confirm your password.';
-        userPassError.style.display = 'block';
-      } else {
-        validator.uniqueness(server.domain + server.authenticationFindUser + '?email=' + newEmail)
-        .then(result => {
-          if (JSON.parse(result).userExists) {
-            newEmailError.textContent = 'Email address already in use.';
-            newEmailError.style.display = 'block';
-          } else {
-            const xhr = new XMLHttpRequest();   
-            xhr.onerror = () => console.log('SettingsNewEmailPage: POST Server not responding.');
-            xhr.onload = () => {
-              const response = JSON.parse(xhr.responseText);
-              if (response.code === 200) {
-                flash.add('success', 'Username updated successfully.');
-                navigate('/settings');
-              } else {
-              }
-            }
-            xhr.open('PATCH', server.domain + server.userSetEmail);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.send(`userEmail=${user.email}&newEmail=${newEmail}&userPass=${userPass}`);
-          }
-        })
-        .catch(error => console.log(error));
-      }
+
+    let isFormValid = true;
+
+    // user password validation
+    try {
+      if (!userPass || userPass.length === 0) throw 'Please confirm your password.';
+      else if (!validator.length(userPass, 8)) throw 'Incorrect password.';
+      else if (!validator.upperLowerCase(userPass)) throw 'Incorrect password.';
+      else if (!validator.numberSymbol(userPass)) throw 'Incorrect password.';
+      else if (!validator.alphanumeric(userPass)) throw 'Incorrect password.';
+    } catch (error) {
+      userPassError.textContent = error;
+      userPassError.style.display = 'block';
+      isFormValid = false;
     }
+
+    if (isFormValid) {
+      const xhr = new XMLHttpRequest();   
+      xhr.onerror = () => console.log('SettingsDeleteUserPage: POST Server not responding.');
+      xhr.onload = () => {
+        console.log(xhr.responseText);
+        const response = JSON.parse(xhr.responseText);
+        if (response.code === 200) {
+          if (session) localStorage.clear();
+          flash.add('success', 'Your user profile removed successfully.');
+          navigate('/');
+        } else {
+          userPassError.textContent = response;
+          userPassError.style.display = 'block';
+        }
+      }
+      xhr.open('PATCH', server.domain + server.userDelete);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.send(`userEmail=${user.email}&userPass=${userPass}`);
+    }    
   };
   
   return (
@@ -108,9 +105,8 @@ const SettingsEmailPage = () => {
         {flash.messages.map((message) => <FlashMessage type={message.type} text={message.text}/>)}
       </ul>
       
-      <SettingsForm id="email" authentication={true} user={user} customData={submit}>
+      <SettingsForm id="delete" authentication={true} user={user} customData={submit}>
         {/* custom form */}
-        <TextInput inputType="text" id="new-email" name="newEmail" placeholder="Email address" onInput={setNewEmail} />
         <TextInput inputType="password" id="user-pass" name="userPass" placeholder="Confirm password" onInput={setUserPass} />
         <input type="submit" className="settings-form-submit-btn" value="Send form" onClick={event => submit(event)} />
       </SettingsForm>
@@ -118,4 +114,4 @@ const SettingsEmailPage = () => {
   );
 };
 
-export default SettingsEmailPage;
+export default SettingsDeleteUserPage;

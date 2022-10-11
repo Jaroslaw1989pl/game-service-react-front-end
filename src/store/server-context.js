@@ -18,8 +18,11 @@ export const ServerContextProvider = (props) => {
 
     userGet: '/user/get-user',
     userSetPassword: '/user/set-password',
+    userUpdatePassword: '/user/update-password',
     userSetAvatar: '/user/set-avatar',
-    userSetUsername: '/user/set-username'
+    userSetUsername: '/user/set-username',
+    userSetEmail: '/user/set-email',
+    userDelete: '/user/delete'
   };
 
   return <ServerContext.Provider value={server}>{props.children}</ServerContext.Provider>;

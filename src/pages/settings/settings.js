@@ -155,7 +155,7 @@ const SettingsPage = (props) => {
                     <p id="p-date">Email address added: {new Date(user.emailUpdate * 1000).toDateString()}</p>
                   </div>
                   <div className="info-cell-edit">
-                    <Link to="/settings/email"><p>Change</p></Link>
+                    <Link to="/settings/email" className={isNameUpdateAvailable ? '' : 'disabled'}><p>Change</p></Link>
                   </div>
                   {
                     !isEmailUpdateAvailable && 
@@ -174,7 +174,7 @@ const SettingsPage = (props) => {
                     <p>Password added: {new Date(user.passUpdate * 1000).toDateString()}</p>
                   </div>
                   <div className="info-cell-edit">
-                    <Link to="/settings-password"><p>Change</p></Link>
+                    <Link to="/settings/password"><p>Change</p></Link>
                   </div>
                   <div style={{clear: 'both'}}></div>
                 </div>
@@ -191,7 +191,7 @@ const SettingsPage = (props) => {
                     <p>Delete <b>{user.name}</b> user account</p>
                   </div>
                   <div className="info-cell-edit">
-                    <Link to="/profile-delete"><button>Delete account</button></Link>
+                    <Link to="/settings/user-delete"><button>Delete account</button></Link>
                   </div>
                   <div style={{clear: 'both'}}></div>
                 </div>

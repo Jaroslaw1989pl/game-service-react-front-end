@@ -21,17 +21,20 @@ const SettingsForm = (props) => {
   const formError = useRef();
 
   useEffect(() => {
-    console.log('dziala');
     if (props.user) {
       const xhr = new XMLHttpRequest();
       xhr.onerror = () => console.log('Settings useEfect. Server not responding.');
       xhr.onload = () => {
-        if (xhr.status === 200) {
-          console.log(xhr.responseText);
+        console.log(xhr.responseText);
+        const response = JSON.parse(xhr.responseText);
+        if (response.code === 200 && response.message === 'not confirmed') {
           setIsEmailSent(true);
-        } 
+        } else if (response.code === 200 && response.message === 'confirmed') {
+          setIsEmailSent(true);
+          setIsCodeConfirmed(true);
+        }
       }
-      xhr.open('GET', server.domain + '/authentication/form-status?userEmail=' + props.user.email, true);
+      xhr.open('GET', server.domain + '/authentication/form-status?userEmail=' + props.user.email + '&db=' + props.id, true);
       xhr.send();
     }
   });
@@ -51,7 +54,7 @@ const SettingsForm = (props) => {
     }
     xhr.open('POST', server.domain + server.authenticationEmailCode);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.send('userEmail=' + props.user.email);  
+    xhr.send('userEmail=' + props.user.email + '&db=' + props.id);  
   }
 
   const confirmCode = (event) => {
@@ -68,7 +71,6 @@ const SettingsForm = (props) => {
         const xhr = new XMLHttpRequest();      
         xhr.onerror = () => console.log('Settings code form. Server not responding.');
         xhr.onload = () => {
-          console.log(xhr.responseText);
           if (xhr.status === 200) setIsCodeConfirmed(true);
           else {
             codeError.textContent = xhr.responseText;
@@ -77,7 +79,7 @@ const SettingsForm = (props) => {
         }
         xhr.open('POST', server.domain + server.authenticationConfirmCode);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        xhr.send('userEmail=' + props.user.email + '&code=' + confCode);  
+        xhr.send('userEmail=' + props.user.email + '&code=' + confCode + '&db=' + props.id);  
       }
     } catch (error) {
       codeError.textContent = error;
@@ -86,7 +88,7 @@ const SettingsForm = (props) => {
   }
 
   return (
-    <main id="settings">
+    <main id={props.id + "-settings"} className="settings-form-content">
 
       <Link to="/settings" id="back-anchor">&#171; Account Management</Link>
 
@@ -94,7 +96,7 @@ const SettingsForm = (props) => {
         <h1 id="title">{/* content added in css file */}</h1>
       </header>
 
-      <div id="settings-form">
+      <div id={props.id + "-settings-form"} className="settings-form">
 
         <p id="top-paragraph">{/* content added in css file */}</p>
 
@@ -128,56 +130,58 @@ const SettingsForm = (props) => {
           </div> 
         }
         {
-          (props.authentication && !isEmailSent) &&
+          (props.authentication && !isEmailSent) 
           // FORM 1 - email with confirmation code
-          <form name="email-form" method="POST">
-              
-            <header>
-              <p id="email-form-top-paragraph"></p>
-              <p><b>The confirmation code will be sent to your email address.</b></p>
-            </header>
-              
-            <input type="submit" id="email-submit-btn" className="settings-form-submit-btn" name="emailSubmitBtn" value="Send email"
-                   onClick={event => sendEmail(event)} />
-              
-          </form>
-        }
-        {
-          (props.authentication && isEmailSent) &&
-          <>
-            <header>
-              {/* wymaga poprawy: ukrycie adresu email pod gwiazdkami */}
-              <p>Confirmation code was sent to email: <b>{props.user.email}</b></p>
-            </header>
-            {/* FORM 2 - Confirm code from email */}
-            <form name="code-form" method="POST">
-                
+          ?
+            <form name="email-form" method="POST">
               <header>
-                <p id="code-form-top-paragraph"></p>
-                <p><b>To continue, enter the confirmation code. The code is valid for 1 hour.</b></p>
+                <p id="email-form-top-paragraph"></p>
+                <p><b>The confirmation code will be sent to your email address.</b></p>
               </header>
-
-              <TextInput inputType="text" id="confirmation-code" name="confirmationCode" placeholder="Confirmation code" 
-                         onInput={setConfCode} />
-                
-              <input type="submit" id="code-submit-btn" className="settings-form-submit-btn" name="codeSubmitBtn" value="Confirm code"
-                     onClick={(event) => confirmCode(event)} />
-                
+              <input type="submit" id="email-submit-btn" className="settings-form-submit-btn" name="emailSubmitBtn" value="Send email"
+                    onClick={event => sendEmail(event)} />
             </form>
-          </>
+          :(props.authentication && isEmailSent && !isCodeConfirmed)
+          ?
+            <>
+              {/* FORM 2 - Confirm code from email */}
+              <header>
+                {/* wymaga poprawy: ukrycie adresu email pod gwiazdkami */}
+                <p>Confirmation code was sent to email: <b>{props.user.email}</b></p>
+              </header>
+              <form name="code-form" method="POST">
+                <header>
+                  <p id="code-form-top-paragraph"></p>
+                  <p><b>To continue, enter the confirmation code. The code is valid for 1 hour.</b></p>
+                </header>
+                <TextInput inputType="text" id="confirmation-code" name="confirmationCode" placeholder="Confirmation code" 
+                          onInput={setConfCode} />
+                <input type="submit" id="code-submit-btn" className="settings-form-submit-btn" name="codeSubmitBtn" value="Confirm code"
+                      onClick={(event) => confirmCode(event)} />
+              </form>
+            </>
+          :(props.authentication && isEmailSent && isCodeConfirmed)
+          ?
+            <>
+              {/* FORM 3 */}
+              <header>
+                <p>Confirmation code was accepted.</p>
+              </header>
+              <form name="custom-form" method="POST">                
+                <header>
+                  <p id="custom-form-top-paragraph"></p>
+                  <p><b></b></p>
+                </header>
+                {props.children}
+                {/* <input type="submit" id="custom-submit-btn" className="settings-form-submit-btn" name="customSubmitBtn" value="Send form" 
+                       onClick={(event) => submit(event)} /> */}
+              </form>
+            </>
+          :
+            <></>
         }
-        {
-          (props.authentication && isCodeConfirmed) && 
-          <>
-            {props.children}
-          </>
-        }
-        {
-          !props.authentication && 
-          <>
-            {props.children}
-          </>
-        }
+
+        {!props.authentication && <>{props.children}</>}
         
       </div>
 
