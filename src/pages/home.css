@@ -13,5 +13,44 @@ body {
 #page-content {
   width: 90%;
   margin: auto;
-  background-color: beige;
 }
+
+  #platform-filter {
+    width: 100%;
+    min-width: 500px;
+    margin-top: 40px;
+  }
+
+    #platform-filter ul {
+      list-style: none;
+      text-align: right;
+    }
+
+      li.platform-item {
+        display: inline;
+        margin: 0 0 0 10px;
+      }
+      li.platform-item:not(:last-child) {
+        border-right: 2px solid #fff;
+        padding-right: 10px;
+      }
+
+        li.platform-item button {
+          border: none;
+          background-color: transparent;
+          font-size: 100%;
+          color: #fff;
+          padding: 0;
+        }
+
+        li.platform-item button:hover {
+          cursor: pointer;
+          color: #90b8c2;
+        }
+
+  #games-tiles-container {
+    width: 100%;
+    min-width: 500px;
+    margin-top: 40px;
+    background-color: rgb(87, 209, 209);
+  }

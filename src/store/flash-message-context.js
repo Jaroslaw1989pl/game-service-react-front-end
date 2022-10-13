@@ -5,7 +5,8 @@ import { createContext, useState } from "react";
 const FlashMessageContext = createContext({
   messages: [],
   totalMessages: 0,
-  add: (type, text) => {}
+  add: (type, text) => {},
+  remove: () => {}
 });
 
 export const FlashMessageContextProvider = (props) => {
@@ -16,10 +17,17 @@ export const FlashMessageContextProvider = (props) => {
     setMessages(previousMessages => previousMessages.concat({type, text}));
   };
 
+  const removeMessageHendler = (messages) => {
+    setMessages(previousMessages => {
+      return previousMessages.filter((message, index) => index > 0);
+    });
+  };
+
   const flash = {
     messages: messages,
     totalMessages: messages.length,
-    add: addMessageHendler
+    add: addMessageHendler,
+    remove: removeMessageHendler
   };
 
   return <FlashMessageContext.Provider value={flash}>{props.children}</FlashMessageContext.Provider>;

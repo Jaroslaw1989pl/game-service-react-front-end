@@ -1,4 +1,5 @@
 // 3rd party components
+import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 /***** custom page components *****/
@@ -15,6 +16,7 @@ import SettingsUsernamePage from "./pages/settings/settings-username";
 import SettingsEmailPage from "./pages/settings/settings-email";
 import SettingsEmailPassword from "./pages/settings/settings-password";
 import SettingsDeleteUserPage from "./pages/settings/settings-delete";
+import CheckersPage from "./pages/games/checkers";
 // error pages
 import NotFound from "./pages/error/404-page";
 
@@ -22,7 +24,9 @@ import NotFound from "./pages/error/404-page";
 const App = () => {
   return (
     <Routes>
+      {/* public routes */}
       <Route path="/" element={<HomePage />}></Route>
+      <Route path="/games/checkers" element={<CheckersPage />}></Route>
       
       {/* authentication routes */}
       <Route path="/login" element={<LoginPage />}></Route>

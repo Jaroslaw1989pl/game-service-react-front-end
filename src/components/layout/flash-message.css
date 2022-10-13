@@ -1,5 +1,5 @@
 #flash-message {
-  animation: flash 7s;
+  /* animation: flash 8s; */
 }
 @keyframes flash {
   0% {

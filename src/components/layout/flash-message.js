@@ -1,25 +1,24 @@
 // 3rd party components
-import { useState, useRef, useEffect } from 'react';
+import { useContext, useState, useRef, useEffect } from 'react';
 // custom style components
 import './flash-message.css';
+// custom components
+import FlashMessageContext from '../../store/flash-message-context';
 
 
 const FlashMessage = (props) => {
 
-  const [time, setTime] = useState(0);
+  const flash = useContext(FlashMessageContext);
   const message = useRef();
   
   useEffect(() => {
     setTimeout(() => {
-      setTime(time => {
-        if (time < 5) return time + 1;
-        else message.current.remove();
-      });
-    }, 1000);
-  }, [time]);
+      flash.remove();
+    }, 5000);
+  }, []);
   
   return (
-    <li ref={message}>
+    <li>
       <div id="flash-message">
         <div id={'message-' + props.type}>{props.text}</div>
       </div>

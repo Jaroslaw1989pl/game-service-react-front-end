@@ -20,18 +20,6 @@ const HomePage = () => {
   const [isUserAuthenticated, setUserAuthenticationStatus] = useState(false);
   const [user, setUser] = useState({});
 
-  const tryFunction = () => {
-    const xhr = new XMLHttpRequest();      
-    xhr.onerror = () => console.log('tryFunction: POST Server not responding.');
-    xhr.onload = () => {
-      console.log(xhr.responseText);
-    }
-    xhr.open('POST', server.domain + '/test', true, 'Jeremy', 'secretpassword');
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.setRequestHeader('Authorization', 'Bearer ' + 'Jeremy' + '|' + 'secretpassword');
-    xhr.send(JSON.stringify({user: 'Jeremy', pass: 'secret'}));
-  };
-
   useEffect(() => {
     
     const session = JSON.parse(localStorage.getItem('session'));
@@ -52,7 +40,7 @@ const HomePage = () => {
           flash.add('error', xhr.responseText);
         }
       }
-      xhr.open('POST', server.domain + server.userGet);
+      xhr.open('POST', server.domain + server.userGet, false);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       xhr.setRequestHeader('Authorization', 'Bearer ' + session.token);
       xhr.send();
@@ -68,8 +56,23 @@ const HomePage = () => {
       </ul>
 
       <div id="page-content">
-        <GameTile />
-        <button id="try-me-btn" onClick={tryFunction}>TRY ME!</button>
+        <div id="platform-filter">
+          <ul>
+            <li className="platform-item"><button>All</button></li>
+            <li className="platform-item"><button>Web</button></li>
+            <li className="platform-item"><button>Android</button></li>
+          </ul>
+        </div>
+        <div id="games-tiles-container">
+          <GameTile src="checkers-board.jpg" name="Checkers"/>
+          <GameTile src="checkers-board.jpg" name="Checkers"/>
+          <GameTile src="checkers-board.jpg" name="Checkers"/>
+          <GameTile src="checkers-board.jpg" name="Checkers"/>
+          <GameTile src="checkers-board.jpg" name="Checkers"/>
+          <GameTile src="checkers-board.jpg" name="Checkers"/>
+          <GameTile src="checkers-board.jpg" name="Checkers"/>
+          <GameTile src="checkers-board.jpg" name="Checkers"/>
+        </div>
       </div>
     </>
   );

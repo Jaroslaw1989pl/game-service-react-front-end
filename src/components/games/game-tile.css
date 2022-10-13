@@ -1,17 +1,53 @@
 .game-tile {
-  width: 90%;
-  margin: auto;
-  background-color: rgb(206, 206, 65);
+  display: inline-block;
+  width: 500px;
+  border-radius: 15px;
+  padding: 25px;
+  background-color: #fff;
 }
 
-  .game-icon {
-    
+  .game-tile-left {
+    display: inline-block;
+    width: 200px;
   }
 
-    .game-icon img {
-      width: 30px;
+    .game-icon {
+
     }
 
-  .game-title {
-    
+      .game-icon img {
+        width: 100%;
+      }
+
+  .game-tile-right {
+    display: inline-block;
+    width: 275px;
+    padding-left: 25px;
   }
+
+    h2.game-title {
+
+    }
+
+    p.game-desc {
+      margin: auto;
+    }
+
+    .game-play-btn {
+      width: 100%;
+      margin: auto;
+      padding: 7px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      background-color: #4cb651;
+      color: #fff;
+    }
+    .game-play-btn:hover {
+      cursor: pointer;
+      background-color: #4fc555;
+    }
+    .game-play-btn:active {
+      background-color: #4aaf4f;
+    }

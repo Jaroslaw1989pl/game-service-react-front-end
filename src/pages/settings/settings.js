@@ -31,7 +31,7 @@ const SettingsPage = (props) => {
   let [counter, setCounter] = useState(0); // <-- zmienna pomocnicza
 
   useEffect(() => {
-    console.log(flash); // <-- logi pomocnicze
+    // console.log(flash); // <-- logi pomocnicze
     const timestamp = Math.floor(new Date().getTime() / 1000);
     
     const session = JSON.parse(localStorage.getItem('session'));
@@ -52,7 +52,7 @@ const SettingsPage = (props) => {
         localStorage.removeItem('session');
         setUserAuthenticationStatus(false);
         flash.add('error', xhr.responseText);
-        navigate('/');
+        navigate('/login');
       }
     }
     xhr.open('POST', server.domain + server.userGet);
