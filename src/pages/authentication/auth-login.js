@@ -4,6 +4,8 @@ import { useContext, useState, useEffect } from 'react';
 import './auth-login.css';
 // custom functions components
 import Validator from '../../scripts/validator.class';
+// custom layouts components
+import AuthLayout from '../../components/layout/auth-layout';
 // custom components
 import AuthForm from "../../components/layout/auth-form";
 import TextInput from '../../components/form/auth-text-input';
@@ -51,10 +53,12 @@ const LoginPage = () => {
   };
   
   return (
-    <AuthForm id="login" action={server.authenticationLoginUser} method="POST" data={submit}>
-      <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" />
-      <TextInput inputType="password" id="user-pass" name="userPass" placeholder="Password" />
-    </AuthForm>
+    <AuthLayout>
+      <AuthForm id="login" action={server.authenticationLoginUser} method="POST" data={submit}>
+        <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" />
+        <TextInput inputType="password" id="user-pass" name="userPass" placeholder="Password" />
+      </AuthForm>
+    </AuthLayout>
   );
 };
 

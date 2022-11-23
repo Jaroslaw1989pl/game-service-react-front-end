@@ -1,0 +1,42 @@
+/* .game-lobby {
+  width: 100%;
+  margin-top: 40px;
+  background-color: darkcyan;
+}
+
+  .game-lobby h1 {
+    display: inline-block;
+    width: 50%;
+    color: #ffffff;
+  }
+
+  .lobby-rooms {
+    float: left;
+    width: 70%;
+    background-color: darkkhaki;
+  }
+
+  .lobby-rooms h3 {
+    color: #fff;
+  }
+
+  .lobby-active-users {
+    float: left;
+    width: 30%;
+    background-color: darkolivegreen;
+  }
+
+    .lobby-online-users h3 {
+      color: #fff;
+    }
+
+    .active-users-list {
+      width: 100%;
+    }
+
+      .active-users-list div:nth-child(even) {
+        background-color: #ccbbce;
+      }
+      .active-users-list div:nth-child(odd) {
+        background-color: #938794;
+      } */

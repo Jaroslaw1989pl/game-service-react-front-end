@@ -4,8 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 // custom style components
 import './settings.css';
 // custom layouts components
-import TopBar from "../../components/layout/top-bar";
-import FlashMessage from '../../components/layout/flash-message';
+import MainLayout from '../../components/layout/main-layout';
 import AvatarCheckbox from '../../components/form/auth-checkbox-input';
 // custom components
 import ServerContext from '../../store/server-context';
@@ -24,35 +23,27 @@ const SettingsPage = (props) => {
   const [isUserAuthenticated, setUserAuthenticationStatus] = useState(false);
   const [user, setUser] = useState({});
   const [isProfileUpdated, setProfileUpdateStatus] = useState();
-  // useState constans for user actions on page
-  const [isNameUpdateAvailable, setNameUpdateAvailability] = useState(false);
-  const [isEmailUpdateAvailable, setEmailUpdateAvailability] = useState(false);
 
-  let [counter, setCounter] = useState(0); // <-- zmienna pomocnicza
-
+  const timestamp = Math.floor(new Date().getTime() / 1000);
+  
   useEffect(() => {
-    // console.log(flash); // <-- logi pomocnicze
-    const timestamp = Math.floor(new Date().getTime() / 1000);
-    
+
     const session = JSON.parse(localStorage.getItem('session'));
 
     const token = session ? session.token : '';
    
-    const xhr = new XMLHttpRequest();
-
-    xhr.onerror = () => console.log('SettingsPage: POST Server not responding.');
+    const xhr = new XMLHttpRequest();      
+        
+    xhr.onerror = () => console.log('HomePage: POST Server not responding.');
     xhr.onload = () => {
       if (xhr.status === 200) {
-        const data = JSON.parse(xhr.responseText);
-        /*if (timestamp > parseInt(data.nameUpdate) + 60 * 60 * 24 * 14) */setNameUpdateAvailability(true);
-        /*if (timestamp > parseInt(data.emailUpdate) + 60 * 60 * 24 * 14) */setEmailUpdateAvailability(true);
         setUserAuthenticationStatus(true);
-        setUser(data);
+        setUser(JSON.parse(xhr.responseText));
       } else {
-        localStorage.removeItem('session');
         setUserAuthenticationStatus(false);
-        flash.add('error', xhr.responseText);
-        navigate('/login');
+        localStorage.removeItem('session');
+        flash.add('error', 'Your session expired');
+        navigate('/login')
       }
     }
     xhr.open('POST', server.domain + server.userGet);
@@ -70,8 +61,7 @@ const SettingsPage = (props) => {
     xhr.onload = () => {
       if (xhr.status === 200) {
         setProfileUpdateStatus(value);
-        setCounter(counter => counter + 1); // <-- zmienna pomocnicza
-        flash.add('success', 'Avatar updated successfully.' + counter);
+        flash.add('success', 'Avatar updated successfully.');
       } else {
         flash.add('error', xhr.responseText);
       }
@@ -82,13 +72,7 @@ const SettingsPage = (props) => {
   };
 
   return (
-    <>
-      <TopBar auth={isUserAuthenticated} user={user}/>
-
-      <ul id="flash-messages-list">
-        {flash.messages.map((message) => <FlashMessage type={message.type} text={message.text}/>)}
-      </ul>
-
+    <MainLayout authentication={isUserAuthenticated} user={user}>
       {/* <div id="page-content"> */}
 
         <section className="content" ref={menu}>
@@ -118,14 +102,17 @@ const SettingsPage = (props) => {
                   <div className="info-cell-value">
                     <h3>{user.name}</h3>
                   </div>
-                  <div className="info-cell-edit">
-                    <Link to="/settings/username" className={isNameUpdateAvailable ? '' : 'disabled'}><p>Change</p></Link>
-                  </div>
                   {
-                    !isNameUpdateAvailable && 
-                    <p className="info-personal-wrapper-message">
-                      Next update will be available on {new Date(parseInt(user.nameUpdate) * 1000 + 3600000 * 24 * 14).toDateString()}.
-                    </p>
+                    /*timestamp > parseInt(user.nameUpdate) + 60 * 60 * 24 * 14*/true
+                    ? <div className="info-cell-edit">
+                        <Link to="/settings/username"><p>Change</p></Link>
+                      </div>
+                    : <><div className="info-cell-edit">
+                        <Link to="/settings/username" className="disabled"><p>Change</p></Link>
+                      </div>
+                      <p className="info-personal-wrapper-message">
+                        Next update will be available on {new Date(parseInt(user.nameUpdate) * 1000 + 3600000 * 24 * 14).toDateString()}.
+                      </p></>
                   }
                   <div style={{clear: 'both'}}></div>
                 </div>
@@ -154,14 +141,17 @@ const SettingsPage = (props) => {
                     <p id="p-email"><b>{user.email}</b></p>
                     <p id="p-date">Email address added: {new Date(user.emailUpdate * 1000).toDateString()}</p>
                   </div>
-                  <div className="info-cell-edit">
-                    <Link to="/settings/email" className={isNameUpdateAvailable ? '' : 'disabled'}><p>Change</p></Link>
-                  </div>
                   {
-                    !isEmailUpdateAvailable && 
-                    <p className="info-personal-wrapper-message">
-                      Next update will be available on {new Date(parseInt(user.emailUpdate) * 1000 + 3600000 * 24 * 14).toDateString()}.
-                    </p>
+                    /*timestamp > parseInt(user.emailUpdate) + 60 * 60 * 24 * 14*/true
+                    ? <div className="info-cell-edit">
+                        <Link to="/settings/email"><p>Change</p></Link>
+                      </div>
+                    : <><div className="info-cell-edit">
+                        <Link to="/settings/email" className="disabled"><p>Change</p></Link>
+                      </div>
+                      <p className="info-personal-wrapper-message">
+                        Next update will be available on {new Date(parseInt(user.emailUpdate) * 1000 + 3600000 * 24 * 14).toDateString()}.
+                      </p></>
                   }
                   <div style={{clear: 'both'}}></div>
                 </div>
@@ -204,7 +194,7 @@ const SettingsPage = (props) => {
         </section>
 
       {/* </div> */}
-    </>
+    </MainLayout>
   );
 };
 

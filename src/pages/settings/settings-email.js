@@ -1,13 +1,12 @@
 // 3rd party components
-import { useContext, useState, useEffect, useRef } from 'react';
-import { useLink, useNavigate } from 'react-router-dom';
+import { useContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 // custom style components
 import './settings-email.css';
 // custom functions components
 import Validator from '../../scripts/validator.class';
 // custom layouts components
-import TopBar from "../../components/layout/top-bar";
-import FlashMessage from '../../components/layout/flash-message';
+import MainLayout from '../../components/layout/main-layout';
 import SettingsForm from '../../components/layout/settings-form';
 import TextInput from '../../components/form/auth-text-input';
 // custom components
@@ -44,10 +43,10 @@ const SettingsEmailPage = () => {
         setUserAuthenticationStatus(true);
         setUser(JSON.parse(xhr.responseText));
       } else {
-        localStorage.removeItem('session');
         setUserAuthenticationStatus(false);
-        flash.add('error', xhr.responseText);
-        navigate('/');
+        localStorage.removeItem('session');
+        flash.add('error', 'Your session expired');
+        navigate('/login');
       }
     }
     xhr.open('POST', server.domain + server.userGet);
@@ -88,6 +87,7 @@ const SettingsEmailPage = () => {
                 flash.add('success', 'Username updated successfully.');
                 navigate('/settings');
               } else {
+
               }
             }
             xhr.open('PATCH', server.domain + server.userSetEmail);
@@ -101,20 +101,14 @@ const SettingsEmailPage = () => {
   };
   
   return (
-    <>
-      <TopBar auth={isUserAuthenticated} user={user}/>
-
-      <ul id="flash-messages-list">
-        {flash.messages.map((message) => <FlashMessage type={message.type} text={message.text}/>)}
-      </ul>
-      
+    <MainLayout authentication={isUserAuthenticated} user={user}>
       <SettingsForm id="email" authentication={true} user={user} customData={submit}>
         {/* custom form */}
         <TextInput inputType="text" id="new-email" name="newEmail" placeholder="Email address" onInput={setNewEmail} />
         <TextInput inputType="password" id="user-pass" name="userPass" placeholder="Confirm password" onInput={setUserPass} />
         <input type="submit" className="settings-form-submit-btn" value="Send form" onClick={event => submit(event)} />
       </SettingsForm>
-    </>
+    </MainLayout>      
   );
 };
 

@@ -4,8 +4,10 @@ import { useContext, useState, useEffect } from 'react';
 import './auth-registration.css';
 // custom functions components
 import Validator from '../../scripts/validator.class';
-// custom components
+// custom layouts components
+import AuthLayout from '../../components/layout/auth-layout';
 import AuthForm from "../../components/layout/auth-form";
+// custom components
 import TextInput from '../../components/form/auth-text-input';
 import AvatarCheckbox from '../../components/form/auth-checkbox-input';
 import ServerContext from '../../store/server-context';
@@ -140,17 +142,19 @@ const RegistrationPage = () => {
   };
 
   return (
-    <AuthForm id="registration" action={server.authenticationRegisterUser} method="POST" data={submit}>
-      <div className="form-left">
-        <AvatarCheckbox isInputHidden={false} onClick={setAvatar}/>
-      </div>
-      <div className="form-right">
-        <TextInput inputType="text" requirements={true} id="user-name" name="username" placeholder="Username" onInput={usernameValidation} />
-        <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" onInput={emailValidation} />
-        <TextInput inputType="password" requirements={true} id="user-pass" name="userPass" placeholder="Password" onInput={setUserPass} />
-        <TextInput inputType="password" id="pass-conf" name="passConf" placeholder="Confirm password" onInput={setPassConf} />
-      </div>
-    </AuthForm>
+    <AuthLayout>
+      <AuthForm id="registration" action={server.authenticationRegisterUser} method="POST" data={submit}>
+        <div className="form-left">
+          <AvatarCheckbox isInputHidden={false} onClick={setAvatar}/>
+        </div>
+        <div className="form-right">
+          <TextInput inputType="text" requirements={true} id="user-name" name="username" placeholder="Username" onInput={usernameValidation} />
+          <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" onInput={emailValidation} />
+          <TextInput inputType="password" requirements={true} id="user-pass" name="userPass" placeholder="Password" onInput={setUserPass} />
+          <TextInput inputType="password" id="pass-conf" name="passConf" placeholder="Confirm password" onInput={setPassConf} />
+        </div>
+      </AuthForm>
+    </AuthLayout>
   );
 };
 

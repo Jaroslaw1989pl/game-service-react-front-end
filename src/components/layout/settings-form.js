@@ -34,7 +34,7 @@ const SettingsForm = (props) => {
           setIsCodeConfirmed(true);
         }
       }
-      xhr.open('GET', server.domain + '/authentication/form-status?userEmail=' + props.user.email + '&db=' + props.id, true);
+      xhr.open('GET', server.domain + '/api/authentication/form-status?userEmail=' + props.user.email + '&db=' + props.id, true);
       xhr.send();
     }
   });

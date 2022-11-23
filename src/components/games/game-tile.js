@@ -13,7 +13,7 @@ const GameTile = (props) => {
         </div>
       </div>
       <div className="game-tile-right">
-        <h2 className="game-title">{props.name}</h2>
+        <h2 className="game-title">{props.title}</h2>
         <p className="game-desc">Tradycyjna gra planszowa dla dwóch gracz. Celem jest zbicie pionów przeciwni.</p>
         <Link to={'/games/checkers'}><button className="game-play-btn">Play</button></Link>
       </div>

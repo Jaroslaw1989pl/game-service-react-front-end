@@ -1,0 +1,32 @@
+.title-board {
+  height: 500px;
+  margin-top: 40px;
+  --mask: linear-gradient(-45deg,#0000 106.07px,#000 0);	
+  -webkit-mask: var(--mask);
+          mask: var(--mask);
+  background-color: burlywood;
+}
+
+  .title-board-header {
+
+  }
+
+    .title-board-header .game-title {
+      display: inline-block;
+      width: 50%;
+      color: #ffffff;
+    }
+
+    .title-board-header .join-panel {
+      display: inline-block;
+      width: 50%;
+      text-align: right;
+      background-color: rgb(151, 165, 70);
+    }
+
+      .title-board-header button.join-game-btn {
+        margin: 10px 10px 10px 0
+      }
+      .title-board-header button.sign-btn {
+        margin: 10px 10px 10px 0
+      }

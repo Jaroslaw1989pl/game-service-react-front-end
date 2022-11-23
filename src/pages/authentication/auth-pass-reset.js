@@ -4,8 +4,10 @@ import { useContext } from 'react';
 import './auth-pass-reset.css';
 // custom functions components
 import Validator from '../../scripts/validator.class';
-// custom components
+// custom layouts components
+import AuthLayout from '../../components/layout/auth-layout';
 import AuthForm from '../../components/layout/auth-form';
+// custom components
 import TextInput from '../../components/form/auth-text-input';
 import ServerContext from '../../store/server-context';
 
@@ -38,8 +40,10 @@ const ResetPasswordPage = () => {
   };
 
   return (
-    <AuthForm id="reset-password" action={server.authenticationPassReset} method="POST" data={submit}>
-      <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" onInput={clearError}/>
+    <AuthForm>
+      <AuthForm id="reset-password" action={server.authenticationPassReset} method="POST" data={submit}>
+        <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" onInput={clearError}/>
+      </AuthForm>
     </AuthForm>
   );
 };

@@ -113,6 +113,7 @@ header#top-bar {
       }
 
       .dropdown-menu {
+        z-index: 200;
         display: none;
         width: 100px;
         position: absolute;

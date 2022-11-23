@@ -11,7 +11,7 @@ import ServerContext from '../../store/server-context';
 const AuthForm = (props) => {
 
   const navigate = useNavigate();
-
+  
   const server = useContext(ServerContext);
   const formError = useRef();
   const [isRegistrationSuccess, setRegistrationStatus] = useState(false);
@@ -63,7 +63,7 @@ const AuthForm = (props) => {
         if (props.id === 'login' && xhr.status === 200) {
           localStorage.removeItem('session');
           localStorage.setItem('session', xhr.responseText);
-          navigate('/');
+          navigate(-1);
         } else if (props.id === 'login' && xhr.status !== 200) {
           formError.current.textContent = JSON.parse(xhr.responseText).error;
           formError.current.style.display = 'block';

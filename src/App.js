@@ -16,7 +16,8 @@ import SettingsUsernamePage from "./pages/settings/settings-username";
 import SettingsEmailPage from "./pages/settings/settings-email";
 import SettingsEmailPassword from "./pages/settings/settings-password";
 import SettingsDeleteUserPage from "./pages/settings/settings-delete";
-import CheckersPage from "./pages/games/checkers";
+import GameHomePage from "./pages/games/game-home-page";
+import GameLobbyPage from "./pages/games/game-lobby";
 // error pages
 import NotFound from "./pages/error/404-page";
 
@@ -26,7 +27,8 @@ const App = () => {
     <Routes>
       {/* public routes */}
       <Route path="/" element={<HomePage />}></Route>
-      <Route path="/games/checkers" element={<CheckersPage />}></Route>
+      <Route path="/games/:game" element={<GameHomePage />}></Route>
+      <Route path="/games/:game/lobby" element={<GameLobbyPage />}></Route>
       
       {/* authentication routes */}
       <Route path="/login" element={<LoginPage />}></Route>

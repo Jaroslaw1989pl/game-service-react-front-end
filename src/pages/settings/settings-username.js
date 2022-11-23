@@ -1,13 +1,12 @@
 // 3rd party components
 import { useContext, useState, useEffect, useRef } from 'react';
-import { useLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // custom style components
 import './settings-username.css';
 // custom functions components
 import Validator from '../../scripts/validator.class';
 // custom layouts components
-import TopBar from "../../components/layout/top-bar";
-import FlashMessage from '../../components/layout/flash-message';
+import MainLayout from '../../components/layout/main-layout';
 import SettingsForm from '../../components/layout/settings-form';
 import TextInput from '../../components/form/auth-text-input';
 // custom components
@@ -46,10 +45,10 @@ const SettingsUsernamePage = () => {
         setUserAuthenticationStatus(true);
         setUser(JSON.parse(xhr.responseText));
       } else {
-        localStorage.removeItem('session');
         setUserAuthenticationStatus(false);
-        flash.add('error', xhr.responseText);
-        navigate('/');
+        localStorage.removeItem('session');
+        flash.add('error', 'Your session expired');
+        navigate('/login');
       }
     }
     xhr.open('POST', server.domain + server.userGet);
@@ -118,13 +117,7 @@ const SettingsUsernamePage = () => {
   };
   
   return (
-    <>
-      <TopBar auth={isUserAuthenticated} user={user}/>
-
-      <ul id="flash-messages-list">
-        {flash.messages.map((message) => <FlashMessage type={message.type} text={message.text}/>)}
-      </ul>
-      
+    <MainLayout authentication={isUserAuthenticated} user={user}>
       <SettingsForm id="username" authentication={false}>
 
         <p id={'new-username-form-error'} className="form-error" ref={formError}></p>
@@ -136,9 +129,7 @@ const SettingsUsernamePage = () => {
         <p><b>2. Confirm payment:</b></p>
         {
           user.gold < 100
-          ? <>
-              <p style={{color: 'red'}}>You don't have enough gold.</p>
-            </>
+          ? <p style={{color: 'red'}}>You don't have enough gold.</p>
           : <>
               <p id="payment-error" className="input-error"></p>
               <p><input type="checkbox" id="username-payment" name="usernamePayment" value="100"
@@ -148,7 +139,8 @@ const SettingsUsernamePage = () => {
             </>
         }
       </SettingsForm>
-    </>
+    </MainLayout>
+      
   );
 };
 

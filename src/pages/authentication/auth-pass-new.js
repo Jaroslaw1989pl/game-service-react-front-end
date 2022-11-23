@@ -5,8 +5,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './auth-pass-new.css';
 // custom functions components
 import Validator from '../../scripts/validator.class';
-// custom components
+// custom layouts components
+import AuthLayout from '../../components/layout/auth-layout';
 import AuthForm from '../../components/layout/auth-form';
+// custom components
 import TextInput from '../../components/form/auth-text-input';
 import ServerContext from '../../store/server-context';
 
@@ -87,10 +89,12 @@ const NewPasswordPage = () => {
   };
 
   return (
-    <AuthForm id="new-password" action={server.userSetPassword} method="PATCH" data={submit}>
-        <TextInput inputType="password" requirements={true} id="user-pass" name="userPass" placeholder="Password" onInput={setUserPass} />
-        <TextInput inputType="password" id="pass-conf" name="passConf" placeholder="Confirm password" onInput={setPassConf} />
-    </AuthForm>
+    <AuthLayout>
+      <AuthForm id="new-password" action={server.userSetPassword} method="PATCH" data={submit}>
+          <TextInput inputType="password" requirements={true} id="user-pass" name="userPass" placeholder="Password" onInput={setUserPass} />
+          <TextInput inputType="password" id="pass-conf" name="passConf" placeholder="Confirm password" onInput={setPassConf} />
+      </AuthForm>
+    </AuthLayout>
   );
 };
 

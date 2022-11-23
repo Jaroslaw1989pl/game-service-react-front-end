@@ -1,13 +1,12 @@
 // 3rd party components
 import { useContext, useState, useEffect, useRef } from 'react';
-import { useLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // custom style components
 import './settings-password.css';
 // custom functions components
 import Validator from '../../scripts/validator.class';
 // custom layouts components
-import TopBar from "../../components/layout/top-bar";
-import FlashMessage from '../../components/layout/flash-message';
+import MainLayout from '../../components/layout/main-layout';
 import SettingsForm from '../../components/layout/settings-form';
 import TextInput from '../../components/form/auth-text-input';
 // custom components
@@ -47,10 +46,10 @@ const SettingsEmailPassword = () => {
         setUserAuthenticationStatus(true);
         setUser(JSON.parse(xhr.responseText));
       } else {
-        localStorage.removeItem('session');
         setUserAuthenticationStatus(false);
-        flash.add('error', xhr.responseText);
-        navigate('/');
+        localStorage.removeItem('session');
+        flash.add('error', 'Your session expired');
+        navigate('/login');
       }
     }
     xhr.open('POST', server.domain + server.userGet);
@@ -113,8 +112,8 @@ const SettingsEmailPassword = () => {
         console.log(xhr.responseText);
         const response = JSON.parse(xhr.responseText);
         if (response.code === 200) {
-          // flash.add('success', 'Password updated successfully.');
-          // navigate('/settings');
+          flash.add('success', 'Password updated successfully.');
+          navigate('/settings');
         } else {
           newPassFormError.textContent = response.message;
           newPassFormError.style.display = 'block';
@@ -127,13 +126,7 @@ const SettingsEmailPassword = () => {
   };
   
   return (
-    <>
-      <TopBar auth={isUserAuthenticated} user={user}/>
-
-      <ul id="flash-messages-list">
-        {flash.messages.map((message) => <FlashMessage type={message.type} text={message.text}/>)}
-      </ul>
-      
+    <MainLayout authentication={isUserAuthenticated} user={user}>
       <SettingsForm id="password" authentication={true} user={user} customData={submit}>
         {/* custom form */}
         <p id={'new-password-form-error'} className="form-error" ref={formError}></p>
@@ -142,7 +135,7 @@ const SettingsEmailPassword = () => {
         <TextInput inputType="password" id="old-user-pass" name="oldUserPass" placeholder="Confirm password" onInput={setOldUserPass} />
         <input type="submit" className="settings-form-submit-btn" value="Send form" onClick={event => submit(event)} />
       </SettingsForm>
-    </>
+    </MainLayout>
   );
 };
 
