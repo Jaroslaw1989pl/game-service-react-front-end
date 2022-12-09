@@ -3,7 +3,7 @@ import { useContext, useState, useRef } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 // custom style components
 import './auth-form.css';
-// custom components
+// custom context components
 import ServerContext from '../../store/server-context';
 
 
@@ -13,6 +13,7 @@ const AuthForm = (props) => {
   const navigate = useNavigate();
   
   const server = useContext(ServerContext);
+
   const formError = useRef();
   const [isRegistrationSuccess, setRegistrationStatus] = useState(false);
   const [isRecoveryEmailSent, setRecoveryEmailStatus] = useState(false);
@@ -53,6 +54,7 @@ const AuthForm = (props) => {
       const xhr = new XMLHttpRequest();
       xhr.onerror = () => console.log('Authentication form. Server not responding.');
       xhr.onload = () => {
+        console.log('auth-form.js', xhr.responseText);
         // wymaga poprawy: sprawdzenie czy użytkownik zapisał się w bazie danych
         if (props.id === 'registration' && xhr.status === 201) {
           setRegistrationStatus(true);
@@ -63,7 +65,7 @@ const AuthForm = (props) => {
         if (props.id === 'login' && xhr.status === 200) {
           localStorage.removeItem('session');
           localStorage.setItem('session', xhr.responseText);
-          navigate(-1);
+          navigate(window.location.pathname === '/registration' ? '/' : -1);
         } else if (props.id === 'login' && xhr.status !== 200) {
           formError.current.textContent = JSON.parse(xhr.responseText).error;
           formError.current.style.display = 'block';

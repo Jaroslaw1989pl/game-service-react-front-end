@@ -12,31 +12,43 @@
 
   .lobby-rooms {
     float: left;
-    width: 70%;
+    width: 55%;
+    margin: 0 20px 0;
     background-color: darkkhaki;
   }
 
-  .lobby-rooms h3 {
-    color: #fff;
-  }
+    .lobby-rooms h3 {
+      color: #fff;
+      background-color: rgb(155, 150, 87);
+    }
+
+    #create-room {
+
+    }
+
+    .lobby-rooms-list {
+      
+    }
 
   .lobby-active-users {
     float: left;
-    width: 30%;
-    background-color: darkolivegreen;
+    width: 25%;
+    margin: 0 20px 0;
+    background-color: rgb(117, 146, 68);
   }
 
-    .lobby-online-users h3 {
+    .lobby-active-users h3 {
       color: #fff;
+      background-color: darkolivegreen;
     }
 
     .active-users-list {
       width: 100%;
     }
 
-      .active-users-list div:nth-child(even) {
+      .active-users-list p:nth-child(even) {
         background-color: #ccbbce;
       }
-      .active-users-list div:nth-child(odd) {
+      .active-users-list p:nth-child(odd) {
         background-color: #938794;
       }

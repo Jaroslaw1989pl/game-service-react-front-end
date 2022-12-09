@@ -15,7 +15,8 @@ const MainLayout = (props) => {
 
   return (
     <>
-      <TopBar auth={props.authentication} user={props.user}/>
+      {/* <TopBar auth={props.authentication} user={props.user}/> */}
+      <TopBar />
 
       <ul id="flash-messages-list">
         {flash.messages.map((message, index) => <FlashMessage key={index} type={message.type} text={message.text}/>)}

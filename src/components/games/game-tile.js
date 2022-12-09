@@ -9,7 +9,7 @@ const GameTile = (props) => {
     <div className="game-tile">
       <div className="game-tile-left">
         <div className="game-icon">
-          <img src={'/img/games/' + props.src} alt="" />
+          <img src={'/img/games/checkers/' + props.src} alt="" />
         </div>
       </div>
       <div className="game-tile-right">

@@ -1,0 +1,36 @@
+table.checkers-board {
+  width: 600px;
+  margin: auto;
+  margin-top: 100px;
+  /* background-color: #ec8484; */
+}
+
+  table.checkers-board tr {
+
+  }
+
+    table.checkers-board td {
+      width: 75px;
+      height: 75px;
+      background-color: #755a4c;
+    }
+    table.checkers-board td.inactive {
+      background-color: #dbd9bd;
+    }
+
+      table.checkers-board .pawn {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+      table.checkers-board .pawn.white {
+        background-color: #fff;
+      }
+      table.checkers-board .pawn.black {
+        background-color: #000;
+      }
+      table.checkers-board .pawn.queen::after {
+        /* background: url('http://localhost:3000/img/games/checkers/crown.png'); */
+        /* content: url('http://localhost:3000/img/games/checkers/crown.png');
+        font-size:40px; */
+      }

@@ -6,15 +6,16 @@ import './auth-login.css';
 import Validator from '../../scripts/validator.class';
 // custom layouts components
 import AuthLayout from '../../components/layout/auth-layout';
+// custom context components
+import ServerContext from '../../store/server-context';
 // custom components
 import AuthForm from "../../components/layout/auth-form";
 import TextInput from '../../components/form/auth-text-input';
-import ServerContext from '../../store/server-context';
 
 
 const LoginPage = () => {
 
-  const server = useContext(ServerContext);
+  const serverContext = useContext(ServerContext);
 
   // clear all existing sessions
   useEffect(() => {
@@ -54,7 +55,7 @@ const LoginPage = () => {
   
   return (
     <AuthLayout>
-      <AuthForm id="login" action={server.authenticationLoginUser} method="POST" data={submit}>
+      <AuthForm id="login" action={serverContext.authenticationLoginUser} method="POST" data={submit}>
         <TextInput inputType="text" id="user-email" name="userEmail" placeholder="Email address" />
         <TextInput inputType="password" id="user-pass" name="userPass" placeholder="Password" />
       </AuthForm>

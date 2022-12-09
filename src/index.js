@@ -6,17 +6,23 @@ import { BrowserRouter } from 'react-router-dom';
 import './index.css';
 // custom components
 import App from './App';
-import { ServerContextProvider } from "./store/server-context";
+import { ServerContextProvider } from './store/server-context';
 import { FlashMessageContextProvider } from './store/flash-message-context';
+import { UserContextProvider } from './store/user-context';
+import { SocketioContextProvider } from './store/socketio-context';
 
 
 const headerRoot = createRoot(document.getElementById('root'));
 headerRoot.render(
   <ServerContextProvider>
-    <FlashMessageContextProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </FlashMessageContextProvider>
+    <UserContextProvider>
+      <SocketioContextProvider>
+        <FlashMessageContextProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </FlashMessageContextProvider>
+      </SocketioContextProvider>
+    </UserContextProvider>
   </ServerContextProvider>
 );

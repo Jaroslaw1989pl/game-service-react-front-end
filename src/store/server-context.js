@@ -27,6 +27,7 @@ export const ServerContextProvider = (props) => {
 
     gamesList: '/api/games/get-list',
     gamesFind: '/api/games/get-game',
+    gamesStartServer: '/api/games/start-server'
   };
 
   return <ServerContext.Provider value={server}>{props.children}</ServerContext.Provider>;

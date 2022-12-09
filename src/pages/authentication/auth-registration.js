@@ -145,7 +145,7 @@ const RegistrationPage = () => {
     <AuthLayout>
       <AuthForm id="registration" action={server.authenticationRegisterUser} method="POST" data={submit}>
         <div className="form-left">
-          <AvatarCheckbox isInputHidden={false} onClick={setAvatar}/>
+          <AvatarCheckbox isInputHidden={false} registration={true} onClick={setAvatar}/>
         </div>
         <div className="form-right">
           <TextInput inputType="text" requirements={true} id="user-name" name="username" placeholder="Username" onInput={usernameValidation} />

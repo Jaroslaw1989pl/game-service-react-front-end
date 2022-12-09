@@ -9,8 +9,9 @@ import Validator from '../../scripts/validator.class';
 import MainLayout from '../../components/layout/main-layout';
 import SettingsForm from '../../components/layout/settings-form';
 import TextInput from '../../components/form/auth-text-input';
-// custom components
+// custom context components
 import ServerContext from '../../store/server-context';
+import UserContext from '../../store/user-context';
 import FlashMessageContext from '../../store/flash-message-context';
 
 
@@ -18,45 +19,17 @@ const SettingsEmailPassword = () => {
   // objects based on custom functions components
   const validator = new Validator();
   // useContext constans
-  const server = useContext(ServerContext);
+  const serverContext = useContext(ServerContext);
+  const userContext = useContext(UserContext);
   const flash = useContext(FlashMessageContext);
   // useNavigate constans
   const navigate = useNavigate();
   // useRef constans
   const formError = useRef();
-  // useState constans for user authentication on page
-  const [isUserAuthenticated, setUserAuthenticationStatus] = useState(false);
-  const [user, setUser] = useState({});
   // useState constans for user actions on page
   const [newUserPass, setNewUserPass] = useState('');
   const [newUserPass2, setNewUserPass2] = useState('');
   const [oldUserPass, setOldUserPass] = useState('');
-
-  useEffect(() => {
-    
-    const session = JSON.parse(localStorage.getItem('session'));
-
-    const token = session ? session.token : '';
-   
-    const xhr = new XMLHttpRequest();      
-        
-    xhr.onerror = () => console.log('SettingsEmailPassword: POST Server not responding.');
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        setUserAuthenticationStatus(true);
-        setUser(JSON.parse(xhr.responseText));
-      } else {
-        setUserAuthenticationStatus(false);
-        localStorage.removeItem('session');
-        flash.add('error', 'Your session expired');
-        navigate('/login');
-      }
-    }
-    xhr.open('POST', server.domain + server.userGet);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-    xhr.send();
-  }, []);
 
   const submit = (event) => {
     
@@ -112,6 +85,8 @@ const SettingsEmailPassword = () => {
         console.log(xhr.responseText);
         const response = JSON.parse(xhr.responseText);
         if (response.code === 200) {
+          // dodać:
+          // userContext.passUpdate = 
           flash.add('success', 'Password updated successfully.');
           navigate('/settings');
         } else {
@@ -119,15 +94,15 @@ const SettingsEmailPassword = () => {
           newPassFormError.style.display = 'block';
         }
       }
-      xhr.open('PATCH', server.domain + server.userUpdatePassword);
+      xhr.open('PATCH', serverContext.domain + serverContext.userUpdatePassword);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.send(`userEmail=${user.email}&newPass=${newUserPass}&newPass2=${newUserPass2}&oldPass=${oldUserPass}`);
+      xhr.send(`userEmail=${userContext.email}&newPass=${newUserPass}&newPass2=${newUserPass2}&oldPass=${oldUserPass}`);
     }
   };
   
   return (
-    <MainLayout authentication={isUserAuthenticated} user={user}>
-      <SettingsForm id="password" authentication={true} user={user} customData={submit}>
+    <MainLayout>
+      <SettingsForm id="password" authentication={userContext.id.length > 0} user={userContext} customData={submit}>
         {/* custom form */}
         <p id={'new-password-form-error'} className="form-error" ref={formError}></p>
         <TextInput inputType="password" requirements={true} id="user-pass" name="newUserPass" placeholder="New password" onInput={setNewUserPass} />

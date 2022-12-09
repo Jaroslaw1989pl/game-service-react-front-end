@@ -18,6 +18,7 @@ import SettingsEmailPassword from "./pages/settings/settings-password";
 import SettingsDeleteUserPage from "./pages/settings/settings-delete";
 import GameHomePage from "./pages/games/game-home-page";
 import GameLobbyPage from "./pages/games/game-lobby";
+import GameRoomPage from "./pages/games/game-room";
 // error pages
 import NotFound from "./pages/error/404-page";
 
@@ -29,6 +30,7 @@ const App = () => {
       <Route path="/" element={<HomePage />}></Route>
       <Route path="/games/:game" element={<GameHomePage />}></Route>
       <Route path="/games/:game/lobby" element={<GameLobbyPage />}></Route>
+      <Route path="/games/:game/room/:room" element={<GameRoomPage />}></Route>
       
       {/* authentication routes */}
       <Route path="/login" element={<LoginPage />}></Route>

@@ -3,10 +3,11 @@ import { useContext, useState, useEffect } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 // custom layouts components
 import GameLayout from '../../components/layout/game-layout';
+import GameLobbyLayout from '../../components/games/game-lobby-layout';
 // custom context components
 import ServerContext from '../../store/server-context';
+import UserContext from '../../store/user-context';
 import FlashMessageContext from '../../store/flash-message-context';
-import GameLobbyLayout from '../../components/games/game-lobby-layout';
 // custom style components
 import './game-lobby.css';
 
@@ -17,45 +18,28 @@ const GameLobbyPage = () => {
 
   const { game } = useParams();
 
-  const server = useContext(ServerContext);
+  const serverContext = useContext(ServerContext);
+  const userContext = useContext(UserContext);
   const flash = useContext(FlashMessageContext);
 
-  const [isUserAuthenticated, setUserAuthenticationStatus] = useState(false);
-  const [user, setUser] = useState({});
-  // const [player, setPlayer] = useState({});
-
-  // const player = {
-  //   socketId: '',
-  //   userId: '',
-  //   userName: ''
-  // };
+  const [gameData, setGameData] = useState({});
 
 
   useEffect(() => {
-    const session = JSON.parse(localStorage.getItem('session'));
-    const token = session ? session.token : '';
-    const xhr = new XMLHttpRequest();
 
-    xhr.onerror = () => console.log('GameLobbyPage: POST Server not responding.');
+    const xhr = new XMLHttpRequest();      
+        
+    xhr.onerror = () => console.log(`GameLobbyPage: GET: ${serverContext.gamesFind}?name=${game} not responding.`);
     xhr.onload = () => {
-      if (xhr.status === 200) {
-        setUserAuthenticationStatus(true);
-        setUser(JSON.parse(xhr.responseText));
-      } else {
-        setUserAuthenticationStatus(false);
-        localStorage.removeItem('session');
-        // flash.add('error', 'Your session expired');
-        navigate('/');
-      }
+      if (xhr.status === 200) setGameData(JSON.parse(xhr.responseText).response);
+      else if (xhr.status === 404) navigate('/');
     }
-    xhr.open('POST', server.domain + server.userGet);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+    xhr.open('GET', serverContext.domain + serverContext.gamesFind + '?name=' + game);
     xhr.send();
   }, []);
 
-  return (<GameLayout authentication={isUserAuthenticated} user={user}>
-      <GameLobbyLayout authentication={isUserAuthenticated} user={user} game={game} />
+  return (<GameLayout game={game}>
+      <GameLobbyLayout authentication={userContext.id.length > 0} user={userContext} game={gameData} />
     </GameLayout>
   );
 };

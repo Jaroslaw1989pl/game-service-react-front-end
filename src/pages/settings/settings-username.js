@@ -1,5 +1,5 @@
 // 3rd party components
-import { useContext, useState, useEffect, useRef } from 'react';
+import { useContext, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // custom style components
 import './settings-username.css';
@@ -9,57 +9,31 @@ import Validator from '../../scripts/validator.class';
 import MainLayout from '../../components/layout/main-layout';
 import SettingsForm from '../../components/layout/settings-form';
 import TextInput from '../../components/form/auth-text-input';
-// custom components
+// custom context components
 import ServerContext from '../../store/server-context';
+import UserContext from '../../store/user-context';
 import FlashMessageContext from '../../store/flash-message-context';
 
 
 const SettingsUsernamePage = () => {
   // objects based on custom functions components
   const validator = new Validator();
-  // useContext constans
-  const server = useContext(ServerContext);
-  const flash = useContext(FlashMessageContext);
-  // useNavigate constans
+
+  const serverContext = useContext(ServerContext);
+  const userContext = useContext(UserContext);
+  const flashContext = useContext(FlashMessageContext);
+
   const navigate = useNavigate();
-  // useRef constans
+
   const formError = useRef();
-  // useState constans for user authentication on page
-  const [isUserAuthenticated, setUserAuthenticationStatus] = useState(false);
-  const [user, setUser] = useState({});
-  // useState constans for user actions on page
+
   const [newUsername, setNewUsername] = useState('');
   const [usernamePayment, setUsernamePayment] = useState(false);
 
-  useEffect(() => {
-    
-    const session = JSON.parse(localStorage.getItem('session'));
-
-    const token = session ? session.token : '';
-   
-    const xhr = new XMLHttpRequest();      
-        
-    xhr.onerror = () => console.log('SettingsUsernamePage: POST Server not responding.');
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        setUserAuthenticationStatus(true);
-        setUser(JSON.parse(xhr.responseText));
-      } else {
-        setUserAuthenticationStatus(false);
-        localStorage.removeItem('session');
-        flash.add('error', 'Your session expired');
-        navigate('/login');
-      }
-    }
-    xhr.open('POST', server.domain + server.userGet);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-    xhr.send();
-  }, []);
 
   const usernameValidation = (value) => {
     if (value.length >= 3 && value.length <= 24 && validator.alphanumeric(value)) {
-      validator.uniqueness(server.domain + server.authenticationFindUser + '?name=' + value)
+      validator.uniqueness(serverContext.domain + serverContext.authenticationFindUser + '?name=' + value)
       .then(result => {
         if (value && JSON.parse(result).userExists) {
           document.getElementById('user-name-uniqueness').style.color = '#7e7e7e';
@@ -101,23 +75,25 @@ const SettingsUsernamePage = () => {
     if (newUsername && usernamePayment) {
       const xhr = new XMLHttpRequest();   
         
-      xhr.onerror = () => console.log('SettingsUsernamePage: POST Server not responding.');
+      xhr.onerror = () => console.log('SettingsUsernamePage: POST: ' + serverContext.userSetUsername + ' not responding.');
       xhr.onload = () => {
         if (xhr.status === 200) {
-          flash.add('success', 'Username updated successfully.');
+          userContext.name = newUsername;
+          userContext.gold -= 100;
+          flashContext.add('success', 'Username updated successfully.');
           navigate('/settings');
         } else {
           console.log(xhr.responseText);
         }
       }
-      xhr.open('PATCH', server.domain + server.userSetUsername);
+      xhr.open('PATCH', serverContext.domain + serverContext.userSetUsername);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.send(`userId=${user.id}&newUsername=${newUsername}&payment=${usernamePayment}&gold=${user.gold - 100}`);
+      xhr.send(`userId=${userContext.id}&newUsername=${newUsername}&payment=${usernamePayment}&gold=${userContext.gold - 100}`);
     };
   };
   
   return (
-    <MainLayout authentication={isUserAuthenticated} user={user}>
+    <MainLayout>
       <SettingsForm id="username" authentication={false}>
 
         <p id={'new-username-form-error'} className="form-error" ref={formError}></p>
@@ -128,7 +104,7 @@ const SettingsUsernamePage = () => {
 
         <p><b>2. Confirm payment:</b></p>
         {
-          user.gold < 100
+          userContext.gold < 100
           ? <p style={{color: 'red'}}>You don't have enough gold.</p>
           : <>
               <p id="payment-error" className="input-error"></p>
